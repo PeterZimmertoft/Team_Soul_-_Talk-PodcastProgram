@@ -1,0 +1,29 @@
+@startuml
+
+Class Gæst{
+    Navn
+    Job
+    Alder
+
+    Noter
+    OptagelsesDato
+}
+
+Class Kalender{
+    Dato
+    Booket
+    
+
+}
+
+Class Podcast {
+    AfsnitNavn
+    EpisodeNummer
+    DeltagendeGæst
+    AfsnitNoter
+}
+
+hide circle
+hide methods
+
+@enduml
