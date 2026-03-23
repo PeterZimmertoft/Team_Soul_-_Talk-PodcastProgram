@@ -1,28 +1,66 @@
 @startuml
 
-Class Gæst{
+
+left to right direction
+
+class Gæst {
     Navn
-    Job
-    Alder
-
-    Noter
-    OptagelsesDato
+    Telefon
+    Email
+    SamtykkeStatus
+    NuværendeStatus
+    SærligeHensyn
 }
 
-Class Kalender{
+
+class Kommune{
+    KommuneNavn
+    EANNummer
+}
+
+class PodcastEpisode {
+    Titel
     Dato
-    Booket
+    Tid
+    Status
+    Mødested 
+    Note
+}
+
+
+class JournalSystem{
+    Gæst
+    StartDato
+    SlutDato
+    Kontrakter
+    Notering
+    AktivitetsStatus
+}
+
+class Borger {
+    CPR-Nummer
+    JobStatus
+    JobType
+
+}
+class Sagsbehandler{
+    Navn
+    SamtykkeStatus
+    Afdeling
+    Borger
+    Telefon
+    Email
     
-
 }
 
-Class Podcast {
-    AfsnitNavn
-    EpisodeNummer
-    DeltagendeGæst
-    AfsnitNoter
-}
 
+
+PodcastEpisode "1" -- "1..*" Gæst 
+Gæst "0..*"-- "   1" JournalSystem
+Sagsbehandler "1" -- "0..*" PodcastEpisode
+Borger "1" -- "1" Gæst
+Sagsbehandler "0..*" -- "1"Kommune
+Sagsbehandler "1..*" -- "1"Borger
 hide circle
 hide methods
 
