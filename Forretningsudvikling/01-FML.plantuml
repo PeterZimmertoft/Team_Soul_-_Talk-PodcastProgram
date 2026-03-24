@@ -1,0 +1,68 @@
+@startuml FML Diagram for Soul and Talk
+package "FML Soul and Talk"  {
+
+class Nøglepartnere {
+    Kommuner
+    Borgere
+}
+
+class Nøgleaktiviteter {
+    Rådgivning
+    Coaching 
+    Vejledning
+    Podcast
+
+    Problemløsning: Hjælpe borgere med at 
+    komme tilbage på arbejdsmarkedet
+    
+    Netværk: Skabe og vedligeholde relationer 
+    med kommuner og borgere for at sikre en stabil kundebase
+}
+
+class Værditilbud{
+    Rådgivning, coaching og vejledning til borgere,
+    der har brug for hjælp til at komme tilbage 
+    på arbejdsmarkedet
+}
+
+class Nøgleressourcer {
+    Erfaren rådgiver og coach
+    Viden om arbejdsmarkedet og beskæftigelsesmuligheder
+    Netværk af kommuner og borgere
+}
+
+class Kunderelationer {
+    Personlig kontakt
+    Netværksrelationer
+}
+
+class Kanaler {
+    Sociale Medier
+    Podcast "Soul and Talk"
+    Fysisk kontakt
+    Telefoniske samtaler
+}
+
+
+class Kundesegmenter {
+    Parrådgivning
+    Unge og udsatte borgere
+    Voksne mennesker med diverse problemstillinger
+}
+
+class Omkostningsstruktur {
+    Transportomkostninger
+    Podcast produktion
+    Markedsføring og reklame
+}
+
+class Indtægtsstrømme {
+    Private indtægter
+    Kommunale indtægter
+}
+
+hide circles
+hide method
+}
+
+@enduml
