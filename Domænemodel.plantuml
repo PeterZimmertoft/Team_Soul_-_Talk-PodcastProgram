@@ -8,8 +8,7 @@ class Gæst {
     Telefon
     Email
     SamtykkeStatus
-    NuværendeStatus
-    SærligeHensyn
+    
 }
 
 
@@ -28,11 +27,11 @@ class PodcastEpisode {
 }
 
 
-class JournalSystem{
+class Journal{
     Gæst
     StartDato
     SlutDato
-    Kontrakter
+    Kontrakt
     Notering
     AktivitetsStatus
 }
@@ -41,13 +40,13 @@ class Borger {
     CPR-Nummer
     JobStatus
     JobType
-
+    SamtykkeStatus
+    NuværendeStatus
+    SærligeHensyn
 }
 class Sagsbehandler{
     Navn
-    SamtykkeStatus
     Afdeling
-    Borger
     Telefon
     Email
     
@@ -55,12 +54,12 @@ class Sagsbehandler{
 
 
 
-PodcastEpisode "1" -- "1..*" Gæst 
-Gæst "0..*"-- "   1" JournalSystem
+PodcastEpisode "0..*" -- "1..*" Gæst 
+Gæst "0..*"-- "   1" Journal
 Sagsbehandler "1" -- "0..*" PodcastEpisode
 Borger "1" -- "1" Gæst
 Sagsbehandler "0..*" -- "1"Kommune
-Sagsbehandler "1..*" -- "1"Borger
+Sagsbehandler "1" -- "0..*"Borger
 hide circle
 hide methods
 
