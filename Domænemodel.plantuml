@@ -28,7 +28,6 @@ class PodcastEpisode {
 
 
 class Journal{
-    Gæst
     StartDato
     SlutDato
     Kontrakt
