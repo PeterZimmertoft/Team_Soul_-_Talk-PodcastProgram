@@ -1,35 +1,22 @@
-# Pre-Sprint
-* Problemstilling
-* Use Cases
-* Domænemodel
-* Product Backlog
-* FML
-* Interessentanalyse
-* Business Case
-* Objekt-model
-
-
-# Pre-Sprint done uge 13 (ikke færdige)
+# Pre-Sprint done uge 13
 
 * Problemstilling
 * Use Cases
 * Domænemodel
 * Product Backlog
 * FML
-* Interessentanalyse
-* Business Case
-* Objekt-model
 
-# Sprint 1 uge 8 - 9
+# Sprint 1 uge 15-16
 
 * Use Cases & Use Case Diagram
-* Domænemodel
 * Objektmodel
 * Systemsekvensdiagram
 * Systemoperationskontrakter
 * BPMN
 * Arbejde med Scrum
 * Systemdokumentation
+* Business Case
+* Interessentanalyse
 
 ## Sprint 1 done 
 
