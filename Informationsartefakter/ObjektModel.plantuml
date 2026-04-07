@@ -1,0 +1,67 @@
+@startuml Objekt-Model til Soul&Talk
+
+<style>
+actor{ /' Formatering af aktører '/
+    LineColor:white;
+    BackgroundColor:white;
+    FontStyle:Bold;
+}
+</style>
+
+skinparam actorStyle Hollow /'Gør Aktører så små som muligt '/
+Actor Sagsbehandler as A1 
+Actor Kommune as A2
+Actor PodcastEpisode as A3
+Actor Borger as A4
+Actor Gæst as A5
+Actor Journal as A6
+
+usecase UC1 as "Jonas Henriksen
+Familie Afdeling
+30 24 08 56
+JonasHen@Horsens.dk"
+
+usecase UC2 as "Horsens Kommune 
+0425638901562"
+
+usecase UC3 as "Livet i Mørket
+25-02-2026
+2 timer
+Færdig
+Eget studie
+Note: Den udsatte har i stærk grad Autisme
+"
+
+usecase UC4 as "050475-6179
+Arbejdsløs
+Kontanthjælpsmodtager
+Godkendt
+Under behandling
+Autisme
+"
+usecase UC5 as "Bo Mortensen
+50 74 82 43
+BoMort@gmail.com
+Modtaget"
+
+usecase UC6 as "kl 14:00
+kl: 16:00
+Podcast episode 13, kontrakt
+Misbrug, Konsekvenser, Arbejde, Udfordringer, øgenavnet Bo Hjemløs
+Inaktiv
+"
+
+UC2 -right- UC1
+UC1 -right- UC3
+UC1 -right- UC4
+UC3 -right- UC5
+UC4 -right- UC5
+UC5 -right- UC6
+
+A1 -down-> UC1 #line:white; /'Fjerne pile der peger ned '/
+A2 -down-> UC2 #line:white;
+A3 -down-> UC3 #line:white;
+A4 -down-> UC4 #line:white;
+A5 -down-> UC5 #line:white;
+A6 -down-> UC6 #line:white;
+@enduml
