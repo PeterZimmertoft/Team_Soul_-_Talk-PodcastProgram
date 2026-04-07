@@ -1,0 +1,26 @@
+@startuml SSD 
+title <u>UC1: Opret borgerprofil til podcast episode  </u>
+
+Actor ":PO" as PO
+participant "<u>:System</u>" as System
+
+PO -> System: OpretBorger(navn, CPR-Nummer, telefon, email)
+PO -> System: AngivJobStatus(jobStatus) og Hensyn(hensynInformationer)
+PO -> System: Uploader Samtykkeerkæring
+PO -> System: GemBorger (navn, CPR-Nummer, telefon, email)
+
+alt informationer godkendt
+System --> PO: Informationer er korrekt
+
+else Informationer blev ikke godkendt
+
+System --> PO: Informationer er inkorrekt
+PO -> System: PO indskriver manglende informationer
+PO -> System: GemBorger (navn, CPR-Nummer, telefon, email)
+end
+System --> PO: Profil er gemt
+
+
+hide footbox
+
+@enduml
