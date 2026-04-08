@@ -18,7 +18,7 @@ System --> PO: Informationer er inkorrekt
 PO -> System: PO indskriver manglende informationer
 PO -> System: GemBorger (navn, CPR-Nummer, telefon, email)
 end
-System --> PO: Profil er gemt
+System --> PO: Borgerprofil er gemt
 
 
 hide footbox
