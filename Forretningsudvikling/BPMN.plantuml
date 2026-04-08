@@ -1,4 +1,4 @@
-@startuml BPMN Budweg
+@startuml BPMN Soul and Talk
 !define BPMN_ENTITY entity
 
 skinparam ActivityStartColor white

@@ -1,0 +1,13 @@
+@startuml - Use Case Model for Soul&Talk
+
+@startsalt Use Case Model for Soul&Talk
+{#
+  **Use Case # ** | **Use Case Navn**
+  UC1 | Opret borgerprofil til podcast episode
+  UC2 | Planlæg podcast-episode
+  UC3 | Tilføj eksisterende gæst til podcast-episode
+  UC4 | Opdatér samtykke/kontrakt på eksisterende gæst
+}
+@endsalt
+@enduml
+
