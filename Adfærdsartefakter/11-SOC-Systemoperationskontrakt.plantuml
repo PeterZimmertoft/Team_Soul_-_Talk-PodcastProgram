@@ -1,0 +1,24 @@
+@startuml SOC Soul&Talk
+skinparam defaultFontName Arial
+
+title Systemoperationskontrakter (SOC) for Soul&Talk
+
+map SOC_OpretBorger {
+    Operation => OpretBorger(navn, CPR-Nummer, telefon, email)
+    Cross_reference => UC1: Opret borgerprofil til podcast episode
+    Precondition => Der skal være en borger som deltager i podcasten\n
+    Postcondition => En ny borger blev oprettet (instance creation)\nBorgeren blev associeret med podcasten (association formed)\nBorger gemt (attribute modification)
+    Output => Borger er oprettet i systemet
+}
+
+map SOC_UploadSamtykke {
+    Operation => Uploader Samtykkeerklæring
+    Cross_reference => UC1: Opret borgerprofil til podcast episode
+    Precondition => Borgeren har underskrevet samtykkeerklæringen\nBorgeren er oprettet i systemet\n
+    Postcondition => Samtykkeerklæring blev oprettet i systemet (instance creation)\nSamtykke erklæringen blev associeret med borgeren (association formed)\nSamtykke erklæringen blev gemt (attribute modification)
+    Output => Bekræftelse på at samtykkeerklæringen er uploadet og gemt i systemet
+}
+
+SOC_OpretBorger -[hidden]down-> SOC_UploadSamtykke
+
+@enduml
