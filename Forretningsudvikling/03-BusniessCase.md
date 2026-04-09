@@ -31,8 +31,6 @@ For at understøtte Soul&Talks fortsatte udvikling og sikre en professionel og d
 ## Interessenter
 * PO
 
-* 
-
 ## Scenarier
 * 0-Scenarie: Den nuværende løsning:
 
@@ -92,7 +90,7 @@ Den forretningsmæssige løsning vil dermed:
 
 - Understøtte automatisering af administrative opgaver
 
-- forbedre kommunikation og koordinering internt og eksternt
+- Forbedre kommunikation og koordinering internt og eksternt
 
 - styrke professionaliseringen af Soul&Talks produktioner
 
@@ -125,7 +123,7 @@ Den forretningsmæssige løsning vil dermed:
 | Hvorfor måles det? | For at sikre, at det nye system anvendes korrekt, og for at verificere, at arbejdsprocesserne bliver mere strukturerede, hurtigere og mindre fejlbehæftede | 
 | Hvordan måles det? | Ved at sammenligne den nuværende arbejdsgang (før implementering) med den optimerede arbejdsgang (efter implementering), herunder tidsforbrug, antal fejl, manglende dokumenter og behov for manuel opfølgning | 
 | Hvem er ansvarlig for måling? | Ledelsen | 
-| Forventet værdiinterval for måling: | Der skal foretages en måling en gang hver 6.måned| 
+| Forventet værdiinterval for måling: | Der skal foretages en måling en gang hver 6. måned | 
 | Handlingsplan ifald målingen ligger udenfor interval: | Der bliver holdt et møde for hele firmaet hvor der snakkes om hvad der skal forbedres | 
 | Ansvarlig for handling: | Chefen til produktion | 
 

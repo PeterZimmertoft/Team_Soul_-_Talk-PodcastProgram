@@ -29,9 +29,9 @@ Denne use case beskriver, hvordan en ny borger oprettes i systemet, så de sener
 
 7A. Hvis et obligatorisk felt mangler, viser systemet en fejlmeddelelse og beder PO udfylde de manglende oplysninger.
 
-7B. Hvis CPR-nummeret ikke har korrekt længde, viser systemet en fejlmeddelelse og beder PO rette feltet.'
+7B. Hvis CPR-nummeret ikke har korrekt længde, viser systemet en fejlmeddelelse og beder PO rette feltet.
 
-8. Systemet gemmer brugerprofilen og bekræfter oprettelsen.
+8. Systemet gemmer borgerprofilen og bekræfter oprettelsen.
 
 
 **UC2: Planlæg podcast-episode**
@@ -40,7 +40,7 @@ Denne use case viser, hvordan programmet skal håndtere den praktiske arbejdsgan
 
 **Aktør:** Product Owner (PO)
 
-**Mål:** At oprette og koordinere en episode med relevante deltager og praktiske oplysninger. 
+**Mål:** At oprette og koordinere en episode med relevante deltagere og praktiske oplysninger. 
 
 **Level:** User goal 
 
@@ -55,7 +55,7 @@ Denne use case viser, hvordan programmet skal håndtere den praktiske arbejdsgan
 
 3. PO vælger en borger som deltager.
 
-4. PO vælger en sagsbehandler eller anden kommunal partner som deltager.
+4. PO vælger en sagsbehandler eller anden kommunal deltager.
 
 5. PO indtaster dato, tidspunkt og mødested.
 
@@ -67,7 +67,7 @@ Denne use case viser, hvordan programmet skal håndtere den praktiske arbejdsgan
 
 8A. Hvis den valgte dato eller tid ikke er ledig, viser systemet en fejlmeddelelse og beder PO vælge et andet tidspunkt.
 
-8B. Hvis en gæst ikke har gyldigt samtykke, advarer systemet PO og forhindrer planlægningen, indtil det er rettet.
+8B. Hvis en deltager ikke har gyldigt samtykke, advarer systemet PO og forhindrer planlægningen, indtil det er rettet.
 
 9. Systemet opretter episoden i kalenderen og bekræfter, at data er gemt.
 
@@ -78,9 +78,7 @@ Denne use case viser processen ved at tilføje en allerede eksisterende gæst ti
 
 **Aktør:** Product Owner (PO)
 
-**Mål:** At tilføje en allerede eksisterende 
-
-gæst til en podcast-episode. 
+**Mål:** At tilføje en allerede eksisterende gæst til en podcast-episode. 
 
 **Level:** User goal 
 
@@ -126,7 +124,7 @@ Denne use case beskriver, hvordan PO opdaterer en eksisterende gæsts samtykke e
 **Hovedscenarie:**
 1. PO åbner gæstens profil.
 
-2. PO vælger dokument- eller kontakt sektionen.
+2. PO vælger dokument- eller kontraktsektionen.
 
 3. Systemet viser de eksisterende dokumenter.
 
@@ -140,7 +138,7 @@ Denne use case beskriver, hvordan PO opdaterer en eksisterende gæsts samtykke e
 
 7. PO bekræfter uploaden.
 
-7A. Hvis PO annullerer, fortsætter systemet uden ændringer. Jeres nuværende version mangler netop den slags afklaring. 
+7A. Hvis PO annullerer, fortsætter systemet uden ændringer.
 
 8. Systemet gemmer den nye kontrakt.
 

@@ -7,7 +7,7 @@
 - Sagsbehandler
 - Kommunen
 
-## Fordeling mellem primær og Sekundære interessenter
+## Fordeling mellem primære og sekundære interessenter
 
 ### Primære
 - PO
@@ -30,7 +30,7 @@
 - Borgere
 - Sagsbehandler
 
-### Ressoursepersonale
+### Ressourcepersonale
 
 - Projektgruppe
 - PO
@@ -40,7 +40,7 @@
 - Sociale medier
 - Platform
 
-### Den Grå Eminencee
+### Den Grå Eminence
 
 - Politikere
 
