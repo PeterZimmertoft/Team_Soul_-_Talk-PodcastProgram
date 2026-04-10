@@ -36,14 +36,24 @@ Vi starter på sprint 2 Torsdag uge 16.
 * Business Case og Interessentanalyse er færdiggjort
 * Kode er ikke påkrævet i denne sprint - fokus på analyse.
 
-# Sprint 2 - ...
+# Sprint 2 - Uge 16
+
+- DCD (MVVM)
+- Pakkediagram
+- SD
+- Relationel -> UML -> SQL Databasemodel
+- C# implementering 
+- Unittest (Automatiseret)
 
 ## Sprint 2 (DONE) - ...
 
 ### Sprint 2 (Sprint Retrospective Meeting) - ...
 
 ### Sprint 2 - Definition of Done 
-...
+
+- Artefakterne er blevet udarbejdet og dokumenteret.
+- At der er blevet oprettet mindst 3 classer
+
 
 # Sprint 3 - ...
 
