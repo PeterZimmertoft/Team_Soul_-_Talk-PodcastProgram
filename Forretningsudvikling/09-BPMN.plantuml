@@ -15,7 +15,7 @@ start
 repeat
 :Skaffer samtykkeerklæring;
 :Kontakter socialrådgiver;
-  repeat while (Samtykkeerlæring er underskrevet af borger) is (Nej) not (Ja)
+  repeat while (Samtykkeerlæring er underskrevet af borger) is (     Nej) not (Ja)
   :Kontakt socialrådgiver;
 
 |Socialrådgiver|
