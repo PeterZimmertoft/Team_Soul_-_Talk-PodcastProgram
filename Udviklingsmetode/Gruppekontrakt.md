@@ -24,7 +24,7 @@ Hvordan fordeler I opgaverne og sikrer, at alle bidrager?
 
 - Vi vil gøre brug af GitHub hvor vi har oprettet et projekt inde i vores fælles GitHub repository for Soul&Talk, til at fordele opgaverne mellem teamets medlemmer - samt for at overholde deadlines. 
 
-*Arbejdet på UCL foregår fælles, medmindre andet er aftalt.
+* Arbejdet på UCL foregår fælles, medmindre andet er aftalt.
 
 Vi gør brug af VS code. 
 
