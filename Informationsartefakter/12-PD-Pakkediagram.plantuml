@@ -1,0 +1,63 @@
+@startuml PackageDiagram for Soul&Talk
+
+left to right direction
+
+Package UI{
+    package MainWindow 
+}
+
+Package APPLICATION{
+    package MainViewModel 
+}
+
+Package PERSISTENCE{
+    package GuestRepository
+    package CitizenRepository
+    package LocalAuthorityRepository
+    package CaseOfficerRepository
+    package PodcastEpisodeRepository 
+    package JournalRepository     
+}
+ 
+Package DOMAIN{
+    package Guest 
+    package Citizen
+    package LocalAuthority
+    package CaseOfficer
+    package PodcastEpisode
+    package Journal
+}
+
+Package TechnicalService{
+    package DBSoulAndTalk
+}
+
+
+UI -[dotted]-> APPLICATION
+APPLICATION -[dotted]-> PERSISTENCE
+PERSISTENCE -[dotted]-> DOMAIN
+DOMAIN -[dotted]-> TechnicalService
+
+
+'/ Til UI pakken
+
+
+'/Applikations pakken
+
+
+'/Persistence -> Domæne lag
+GuestRepository -[dotted]- Guest
+CitizenRepository -[dotted]- Citizen
+LocalAuthorityRepository -[dotted]- LocalAuthority
+CaseOfficerRepository -[dotted]- CaseOfficer
+PodcastEpisodeRepository -[dotted]- PodcastEpisode
+JournalRepository -[dotted]- Journal
+
+'/TechnicalService pakken
+
+
+hide methods
+hide fields
+hide circle
+
+@enduml

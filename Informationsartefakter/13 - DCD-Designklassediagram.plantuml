@@ -1,0 +1,152 @@
+@startuml
+skinparam classAttributeIconSize 0
+left to right direction
+
+
+package "ViewModels (Application)"{
+    class MainViewModel {
+        - CaseOfficerRepository : CaseOfficerRepository
+        - CitizenRepository : CitizenRepository
+        - LocalAuthorityRepository : LocalAuthorityRepository
+        - PodcastEpisodeRepository : PodcastEpisodeRepository
+        - JournalRepository : JournalRepository
+        + MainViewModel(CaseOfficerRepository : CaseOfficerRepository, 
+        CitizenRepository : CitizenRepository, LocalAuthorityRepository : LocalAuthorityRepository, 
+        PodcastEpisodeRepository : PodcastEpisodeRepository, JournalRepository : JournalRepository)
+    }
+}
+
+
+package "Persistence (Repositories)" {
+
+class IRepository {
+    + Add()
+    + FindById(id: int)
+    + Update()
+    + Delete()
+    + Edit()
+}
+ 
+class GuestRepository{
+
+- «readonly» connectionString : string
+- guest : Guest[0..*]
++ CreateGuest()
+}
+
+class CaseOfficerRepository{
+ - «readonly» connectionString : string
+    - caseOfficer : CaseOfficer[0..*]
+}
+
+class CitizenRepository{
+ - «readonly» connectionString : string
+    - citizen : Citizen[0..*]
+}
+
+class LocalAuthorityRepository{
+ - «readonly» connectionString : string
+    - localAuthority : LocalAuthority[0..*]
+}
+
+class PodcastEpisodeRepository{
+ - «readonly» connectionString : string
+    - podcastEpisode : PodcastEpisode[0..*]
+}
+
+class JournalRepository{
+ - «readonly» connectionString : string
+    - journal : Journal[0..*]
+}
+
+}
+
+package "Models (Domain)" {
+class LocalAuthority {
+    - localAuthorityId : int
+    - localAuthorityName : String
+    - eanNummer : String
+
+     + <<constructor>> LocalAuthority(id : int)
+}
+
+class CaseOfficer {
+    - caseOfficerId : int
+    - name : String
+    - department : String
+    - phone : String
+    - email : String
+    
+     + <<constructor>> CaseOfficer(id : int)
+}
+
+class PodcastEpisode {
+    - podcastEpisodeId : int
+    - title : String
+    - Date : Date
+    - time : Time
+    - status : String
+    - meetingPlace : String
+    - note : String
+
+    + <<constructor>> PodcastEpisode(id : int)
+}
+
+class Citizen {
+    - citizenId : int
+    - name : String
+    - cprNumber : String
+    - workStatus : String
+    - workType : String
+    - consentStatus : String
+    - currentStatus : String
+    - specialConsiderations : String
+
+    + <<constructor>> Citizen(id : int)
+}
+
+class Guest {
+    - guestId : int
+    - name : String
+    - phone : String
+    - email : String
+    - consentStatus : String
+
+     + <<constructor>> Guest(id : int)
+}
+
+class Journal {
+    - journalId : int
+    - startDate : Date
+    - endDate : Date
+    - contract : String
+    - note : String
+    - activityStatus : String
+    
+     + <<constructor>> Journal(id : int)
+}
+
+MainViewModel .. CaseOfficerRepository
+MainViewModel .. CitizenRepository
+MainViewModel .. LocalAuthorityRepository
+MainViewModel .. PodcastEpisodeRepository
+MainViewModel .. JournalRepository
+MainViewModel .. GuestRepository
+
+CaseOfficerRepository .. CaseOfficer
+CitizenRepository .. Citizen
+LocalAuthorityRepository .. LocalAuthority
+PodcastEpisodeRepository .. PodcastEpisode
+JournalRepository .. Journal
+GuestRepository .. Guest
+
+PodcastEpisode "0..*" -- "1..*" Guest
+Guest "0..*"-- "   1" Journal 
+CaseOfficer "1" -- "0..*" PodcastEpisode
+Citizen "  1" -- "  1" Guest
+CaseOfficer "0..*" -- "1"LocalAuthority
+CaseOfficer "1" -- "0..*"Citizen
+
+}
+hide circle
+@enduml
