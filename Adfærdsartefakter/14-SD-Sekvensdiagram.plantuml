@@ -1,0 +1,30 @@
+@startuml
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+
+actor "Product Owner" as PO
+participant "CreateCitizenView" as View
+participant "CreateCitizenViewModel" as VM
+participant "CitizenRepository" as Repo
+participant "Citizen" as Citizen
+
+title Sequence Diagram: Create citizen
+
+PO -> View : Open create citizen form
+activate View
+View -> VM : Submit citizen data
+activate VM
+    VM -> Repo : SaveCitizen(citizen)
+    activate Repo
+        Repo -> Citizen : Create citizen record
+        activate Citizen
+        Citizen --> Repo : Citizen created
+        deactivate Citizen
+        Repo --> VM : Citizen saved
+    deactivate Repo
+    VM --> View : Return success
+deactivate VM
+View --> PO : Show success message
+deactivate View
+
+@enduml
