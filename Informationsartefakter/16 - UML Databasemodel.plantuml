@@ -1,0 +1,75 @@
+@startuml - UML DatabaseModel for Budweg
+hide circle
+
+/'Relationer
+SPAREPARTS(<ins>SparePartId</ins> SparePartType, SparePartAmount)
+STATION(<ins>StationId</ins>, StationType, StationsName, *SparePartId*)
+BRAKECALIPER(<ins>CaliperId</ins>, CaliperType, CaliperStatus, Barcode, CaliperNumber, OrderNumber, Note, *StationId*)
+'/
+class "GUEST" <<table>>{
+    {static} <<PK>> GuestId : Int
+    {field} Name : NVarChar(50)
+    {field} Phone : NVarChar(12)
+    {field} Email : NVarChar(50)
+    {field} ConsentStatus : NVarChar(50)
+    //<<FK>> PodcastEpisodeId : Int//
+    //<<FK>> CitizenId : Int//
+    //<<FK>> JournalId : Int//
+    {method} <<PK>> PK_GUEST()
+    {method} <<FK>> FK_GUEST_JOURNAL()
+}
+
+class "CITIZEN" <<table>>{
+    {static} <<PK>> CitizenId : Int
+    {field} Name : NVarChar(50)
+    {field} CprNumber : NVarChar(10)
+    {field} WorkStatus : NVarChar(50)
+    {field} WorkType : NVarChar(50)
+    {field} ConsentStatus : NVarChar(50)
+    {field} CurrentStatus : NVarChar(50)
+    {field} SpecialConsiderations : NVarChar(255)
+    //<<FK>> CaseOfficerId : Int//
+    {method} <<PK>> PK_CITIZEN()
+    {method} <<FK>> FK_CITIZEN_CASEOFFICER()
+}
+
+class "LOCALAUTHORITY" <<table>>{
+    {static} <<PK>> LocalAuthorityId : Int
+    {field} LocalAuthorityName : NVarChar(50)
+    {field} EANNumber : NVarChar(13)
+    {method} <<PK>> PK_LOCALAUTHORITY()
+}
+
+class "CASEOFFICER" <<table>>{
+    {static} <<PK>> CaseOfficerId : Int
+    {field} Name : NVarChar(50)
+    {field} Department : NVarChar(50)
+    {field} Phone : NVarChar(12)
+    {field} Email : NVarChar(50)
+    //<<FK>> LocalAuthorityId : Int//
+    {method} <<PK>> PK_CASEOFFICER()
+    {method} <<FK>> FK_CASEOFFICER_LOCALAUTHORITY()
+    
+}
+
+class "PODCASTEPISODE" <<table>>{
+    {static} <<PK>> PodcastEpisodeId : Int
+    {field} Title : NVarChar(50)
+    {field} Date : DateTime2
+    {field} Duration : Time
+    {field} Status : NVarChar(255)
+    {method} <<PK>> PK_PODCASTEPISODE()
+}
+
+class "JOURNAL" <<table>>{
+    {static} <<PK>> StationId : Int
+    {field} StationType : NVarChar(50)
+    {field} StationName : NVarChar(50)
+    {method} <<PK>> PK_STATION()
+}
+'relationer'
+SPAREPARTS "0..*" -- "1..*" STATION
+BRAKECALIPER "0..*" -- "1..*" STATION
+
+
+@enduml

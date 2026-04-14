@@ -1,6 +1,6 @@
 ## Relationel Databaseskema
 
-GUEST(<ins>GuestId</ins> Name, Phone, Email, ConsentStatus, *PodcastEpisodeId*, *CitizenId*)
+GUEST(<ins>GuestId</ins> Name, Phone, Email, ConsentStatus, *PodcastEpisodeId*, *CitizenId*, *JournalId*)
 
 
 CITIZEN(<ins>CitizenId</ins>, Name, CPRNumber, WorkStatus, WorkType, ConsentStatus, CurrentStatus, SpecialConsiderations, *CaseOfficerId*)

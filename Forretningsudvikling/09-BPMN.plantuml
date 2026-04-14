@@ -1,10 +1,10 @@
-@startuml BPMN Soul and Talk
+@startuml Aktivitetsdiagram Soul and Talk
 !define BPMN_ENTITY entity
 
 skinparam ActivityStartColor white
 skinparam ActivityEndColor black
 
-title BPMN: Aktivitetsflow for Soul and Talk
+title Aktivitetsdiagram: Flow for Soul and Talk
 
 |#White|Kommunen|
 start
@@ -19,8 +19,10 @@ repeat
   :Kontakt socialrådgiver;
 
 |Socialrådgiver|
+repeat
 :Modtager bestilling;
 :Bekræfter samtykkeerklæring;
+repeat while (Er samtykkeerklæringen bekræftet) is (     Nej) not (Ja)
 
 
 
@@ -28,7 +30,7 @@ repeat
   :Socialrådgiver kontakter borger;
   |Podcast Episode|
   :Aftal dato og mødested;
-  note right: Jf. Domænemodel:\n Til mødet med borger noteres borgers jobtype, \njobstatus, CPRnummer, nuværende status og særlige hensyn.
+  
 stop
 
 

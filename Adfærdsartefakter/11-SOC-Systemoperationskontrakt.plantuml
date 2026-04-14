@@ -8,7 +8,7 @@ map SOC_OpretBorger {
     Cross_reference => UC1: Opret borgerprofil til podcast episode
     Precondition => Der skal være en borger som deltager i podcasten\n
     Postcondition => En ny borger blev oprettet (instance creation)\nBorgeren blev associeret med podcasten (association formed)\nBorger gemt (attribute modification)
-    Output => Borger er oprettet i systemet
+    Output => Bekræftelse på borger er oprettet i systemet
 }
 
 map SOC_UploadSamtykke {
