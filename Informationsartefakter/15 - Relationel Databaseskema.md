@@ -10,7 +10,7 @@ LOCALAUTHORITY(<ins>LocalAuthorityId</ins>, LocalAuthorityName, EANNumber)
 
 CASEOFFICER(<ins>CaseOfficerId</ins>, Name, Department, Phone, Email, *LocalAuthorityId*)
 
-PODCASTEPISODE(<ins>PodcastId</ins>, Title, Date, Time, Status, MeetingPlace, Note, *GuestId*, *CaseOfficerId*)
+PODCASTEPISODE(<ins>PodcastId</ins>, Title, Date, Duration, Status, MeetingPlace, Note, *GuestId*, *CaseOfficerId*)
 
-JOURNAL(<ins>JournalId</ins>, StartDate, EndDate, Contract, Note, ActivityStatus, *GuestId*, *PodcastEpisodeId*)
+JOURNAL(<ins>JournalId</ins>, StartDate, EndDate, Contract, Note, ActivityStatus)
 

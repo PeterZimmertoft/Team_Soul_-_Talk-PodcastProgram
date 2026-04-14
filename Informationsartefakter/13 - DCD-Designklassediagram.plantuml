@@ -71,9 +71,9 @@ class LocalAuthority {
 }
 
 class CaseOfficer {
-    - caseOfficerId : int
-    - name : String
-    - department : String
+    + caseOfficerId : int
+    + name : String
+    + department : String
     - phone : String
     - email : String
     
@@ -81,10 +81,10 @@ class CaseOfficer {
 }
 
 class PodcastEpisode {
-    - podcastEpisodeId : int
-    - title : String
-    - Date : Date
-    - time : Time
+    + podcastEpisodeId : int
+    + title : String
+    + date : Date
+    + duration : Time
     - status : String
     - meetingPlace : String
     - note : String
@@ -93,8 +93,8 @@ class PodcastEpisode {
 }
 
 class Citizen {
-    - citizenId : int
-    - name : String
+    + citizenId : int
+    + name : String
     - cprNumber : String
     - workStatus : String
     - workType : String
@@ -106,20 +106,20 @@ class Citizen {
 }
 
 class Guest {
-    - guestId : int
-    - name : String
+    + guestId : int
+    + name : String
     - phone : String
     - email : String
-    - consentStatus : String
+    + consentStatus : bool
 
      + <<constructor>> Guest(id : int)
 }
 
 class Journal {
-    - journalId : int
-    - startDate : Date
-    - endDate : Date
-    - contract : String
+    + journalId : int
+    + startDate : Date
+    + endDate : Date
+    + contract : bool
     - note : String
     - activityStatus : String
     

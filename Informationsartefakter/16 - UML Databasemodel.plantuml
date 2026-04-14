@@ -25,7 +25,7 @@ class "CITIZEN" <<table>>{
     {field} CprNumber : NVarChar(10)
     {field} WorkStatus : NVarChar(50)
     {field} WorkType : NVarChar(50)
-    {field} ConsentStatus : NVarChar(50)
+    {field} ConsentStatus : Bit
     {field} CurrentStatus : NVarChar(50)
     {field} SpecialConsiderations : NVarChar(255)
     //<<FK>> CaseOfficerId : Int//
@@ -58,18 +58,31 @@ class "PODCASTEPISODE" <<table>>{
     {field} Date : DateTime2
     {field} Duration : Time
     {field} Status : NVarChar(255)
+    {field} MeetingPlace : NVarChar(255)
+    {field} Note : NVarChar(255)
+    //<<FK>> GuestId : Int//
+    //<<FK>> CaseOfficerId : Int//
     {method} <<PK>> PK_PODCASTEPISODE()
+    {method} <<FK>> FK_PODCASTEPISODE_GUEST()
+    {method} <<FK>> FK_PODCASTEPISODE_CASEOFFICER()
 }
 
 class "JOURNAL" <<table>>{
-    {static} <<PK>> StationId : Int
-    {field} StationType : NVarChar(50)
-    {field} StationName : NVarChar(50)
-    {method} <<PK>> PK_STATION()
+    {static} <<PK>> JournalId : Int
+    {field} StartDate : DateTime2
+    {field} EndDate : DateTime2
+    {field} Contract : Bit
+    {field} Note : NVarChar(255)
+    {field} ActivityStatus : NVarChar(50)
+    {method} <<PK>> PK_JOURNAL()
 }
 'relationer'
-SPAREPARTS "0..*" -- "1..*" STATION
-BRAKECALIPER "0..*" -- "1..*" STATION
+LOCALAUTHORITY "1" -- "0..*" CASEOFFICER
+CASEOFFICER "1" -- "0..*" PODCASTEPISODE
+CASEOFFICER "1" -- "0..*" CITIZEN
+CITIZEN "1" -- "1" GUEST
+PODCASTEPISODE "0..*" -- "1" GUEST
+GUEST "0..*" -- "1" JOURNAL
 
 
 @enduml
