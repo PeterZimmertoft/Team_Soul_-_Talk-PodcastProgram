@@ -65,7 +65,7 @@ package "Models (Domain)" {
 class LocalAuthority {
     - localAuthorityId : int
     - localAuthorityName : String
-    - eanNummer : String
+    - eanNumber : String
 
      + <<constructor>> LocalAuthority(id : int)
 }
