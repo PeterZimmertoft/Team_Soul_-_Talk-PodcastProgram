@@ -1,60 +1,59 @@
 @startuml PackageDiagram for Soul&Talk
 
 left to right direction
+skinparam packageStyle rectangle
+skinparam packageFontSize 14
 
-Package UI{
-    package MainWindow 
+package "UI" as UI {
+    package "MainWindow"
 }
 
-Package APPLICATION{
-    package MainViewModel 
+package "APPLICATION" as APPLICATION {
+    package "MainViewModel"
+    package "Use Cases" as USECASES {
+        package "UC1: Create Citizen" as UC1
+    }
 }
 
-Package PERSISTENCE{
-    package GuestRepository
-    package CitizenRepository
-    package LocalAuthorityRepository
-    package CaseOfficerRepository
-    package PodcastEpisodeRepository 
-    package JournalRepository     
-}
- 
-Package DOMAIN{
-    package Guest 
-    package Citizen
-    package LocalAuthority
-    package CaseOfficer
-    package PodcastEpisode
-    package Journal
+package "PERSISTENCE" as PERSISTENCE {
+    package "GuestRepository"
+    package "CitizenRepository"
+    package "LocalAuthorityRepository"
+    package "CaseOfficerRepository"
+    package "PodcastEpisodeRepository"
+    package "JournalRepository"
 }
 
-Package TechnicalService{
-    package DBSoulAndTalk
+package "DOMAIN" as DOMAIN {
+    package "Guest"
+    package "Citizen"
+    package "LocalAuthority"
+    package "CaseOfficer"
+    package "PodcastEpisode"
+    package "Journal"
 }
 
+package "TECHNICAL SERVICE" as TECHNICAL_SERVICE {
+    package "DBSoulAndTalk"
+}
 
-UI -[dotted]-> APPLICATION
-APPLICATION -[dotted]-> PERSISTENCE
-PERSISTENCE -[dotted]-> DOMAIN
-DOMAIN -[dotted]-> TechnicalService
+UI ..> APPLICATION : using
+UI ..> UC1 : using
+APPLICATION ..> PERSISTENCE : using
+PERSISTENCE ..> DOMAIN : using
+PERSISTENCE ..> TECHNICAL_SERVICE : using database
 
+UC1 ..> "CitizenRepository" : using
+UC1 ..> "GuestRepository" : using
+UC1 ..> "Citizen" : using
+UC1 ..> "Guest" : using
 
-'/ Til UI pakken
-
-
-'/Applikations pakken
-
-
-'/Persistence -> Domæne lag
-GuestRepository -[dotted]- Guest
-CitizenRepository -[dotted]- Citizen
-LocalAuthorityRepository -[dotted]- LocalAuthority
-CaseOfficerRepository -[dotted]- CaseOfficer
-PodcastEpisodeRepository -[dotted]- PodcastEpisode
-JournalRepository -[dotted]- Journal
-
-'/TechnicalService pakken
-
+"GuestRepository" ..> "Guest" : using
+"CitizenRepository" ..> "Citizen" : using
+"LocalAuthorityRepository" ..> "LocalAuthority" : using
+"CaseOfficerRepository" ..> "CaseOfficer" : using
+"PodcastEpisodeRepository" ..> "PodcastEpisode" : using
+"JournalRepository" ..> "Journal" : using
 
 hide methods
 hide fields
