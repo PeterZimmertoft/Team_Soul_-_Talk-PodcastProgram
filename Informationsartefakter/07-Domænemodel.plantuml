@@ -7,8 +7,6 @@ class Gæst {
     Navn
     Telefon
     Email
-    SamtykkeStatus
-    
 }
 
 
@@ -26,15 +24,6 @@ class PodcastEpisode {
     Note
 }
 
-
-class Journal{
-    StartDato
-    SlutDato
-    Kontrakt
-    Notering
-    AktivitetsStatus
-}
-
 class Borger {
     CPR-Nummer
     JobStatus
@@ -48,17 +37,16 @@ class Sagsbehandler{
     Afdeling
     Telefon
     Email
-    
 }
 
 
 
 PodcastEpisode "0..*" -- "1..*" Gæst 
-Gæst "0..*"-- "   1" Journal
 Sagsbehandler "1" -- "0..*" PodcastEpisode
 Borger "1" -- "1" Gæst
 Sagsbehandler "0..*" -- "1"Kommune
 Sagsbehandler "1" -- "0..*"Borger
+
 hide circle
 hide methods
 

@@ -21,7 +21,6 @@ package "PERSISTENCE" as PERSISTENCE {
     package "LocalAuthorityRepository"
     package "CaseOfficerRepository"
     package "PodcastEpisodeRepository"
-    package "JournalRepository"
 }
 
 package "DOMAIN" as DOMAIN {
@@ -30,7 +29,6 @@ package "DOMAIN" as DOMAIN {
     package "LocalAuthority"
     package "CaseOfficer"
     package "PodcastEpisode"
-    package "Journal"
 }
 
 package "TECHNICAL SERVICE" as TECHNICAL_SERVICE {
@@ -53,7 +51,6 @@ UC1 ..> "Guest" : using
 "LocalAuthorityRepository" ..> "LocalAuthority" : using
 "CaseOfficerRepository" ..> "CaseOfficer" : using
 "PodcastEpisodeRepository" ..> "PodcastEpisode" : using
-"JournalRepository" ..> "Journal" : using
 
 hide methods
 hide fields

@@ -14,9 +14,7 @@ class "GUEST" <<table>>{
     {field} ConsentStatus : NVarChar(50)
     //<<FK>> PodcastEpisodeId : Int//
     //<<FK>> CitizenId : Int//
-    //<<FK>> JournalId : Int//
     {method} <<PK>> PK_GUEST()
-    {method} <<FK>> FK_GUEST_JOURNAL()
 }
 
 class "CITIZEN" <<table>>{
@@ -67,22 +65,12 @@ class "PODCASTEPISODE" <<table>>{
     {method} <<FK>> FK_PODCASTEPISODE_CASEOFFICER()
 }
 
-class "JOURNAL" <<table>>{
-    {static} <<PK>> JournalId : Int
-    {field} StartDate : DateTime2
-    {field} EndDate : DateTime2
-    {field} Contract : Bit
-    {field} Note : NVarChar(255)
-    {field} ActivityStatus : NVarChar(50)
-    {method} <<PK>> PK_JOURNAL()
-}
 'relationer'
 LOCALAUTHORITY "1" -- "0..*" CASEOFFICER
 CASEOFFICER "1" -- "0..*" PODCASTEPISODE
 CASEOFFICER "1" -- "0..*" CITIZEN
 CITIZEN "1" -- "1" GUEST
 PODCASTEPISODE "0..*" -- "1" GUEST
-GUEST "0..*" -- "1" JOURNAL
 
 
 @enduml

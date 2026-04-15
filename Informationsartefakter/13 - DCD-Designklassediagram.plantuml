@@ -9,10 +9,9 @@ package "ViewModels (Application)"{
         - CitizenRepository : CitizenRepository
         - LocalAuthorityRepository : LocalAuthorityRepository
         - PodcastEpisodeRepository : PodcastEpisodeRepository
-        - JournalRepository : JournalRepository
         + MainViewModel(CaseOfficerRepository : CaseOfficerRepository, 
         CitizenRepository : CitizenRepository, LocalAuthorityRepository : LocalAuthorityRepository, 
-        PodcastEpisodeRepository : PodcastEpisodeRepository, JournalRepository : JournalRepository)
+        PodcastEpisodeRepository : PodcastEpisodeRepository)
     }
 }
 
@@ -52,11 +51,6 @@ class LocalAuthorityRepository{
 class PodcastEpisodeRepository{
  - «readonly» connectionString : string
     - podcastEpisode : PodcastEpisode[0..*]
-}
-
-class JournalRepository{
- - «readonly» connectionString : string
-    - journal : Journal[0..*]
 }
 
 }
@@ -115,33 +109,20 @@ class Guest {
      + <<constructor>> Guest(id : int)
 }
 
-class Journal {
-    + journalId : int
-    + startDate : Date
-    + endDate : Date
-    + contract : bool
-    - note : String
-    - activityStatus : String
-    
-     + <<constructor>> Journal(id : int)
-}
 
 MainViewModel .. CaseOfficerRepository
 MainViewModel .. CitizenRepository
 MainViewModel .. LocalAuthorityRepository
 MainViewModel .. PodcastEpisodeRepository
-MainViewModel .. JournalRepository
 MainViewModel .. GuestRepository
 
 CaseOfficerRepository .. CaseOfficer
 CitizenRepository .. Citizen
 LocalAuthorityRepository .. LocalAuthority
 PodcastEpisodeRepository .. PodcastEpisode
-JournalRepository .. Journal
 GuestRepository .. Guest
 
 PodcastEpisode "0..*" -- "1..*" Guest
-Guest "0..*"-- "   1" Journal 
 CaseOfficer "1" -- "0..*" PodcastEpisode
 Citizen "  1" -- "  1" Guest
 CaseOfficer "0..*" -- "1"LocalAuthority
