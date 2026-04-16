@@ -22,8 +22,6 @@
 ## Sprint 1 (DONE) - Onsdag uge 15
 * Vi har udarbejdet artefakterne fra sprint 1 og er blevet færdige i uge 15. 
 
-Vi starter på sprint 2 Torsdag uge 16.
-
 ### Sprint 1 (Sprint Retrospective Meeting) - Torsdag uge 15
 * Vi har gennemgået de udførte sprint items fra vores første sprint. Vi har lavet rettelser og færdiggjort de første udkast af analyse artefakterne. 
 
@@ -42,20 +40,25 @@ Vi starter på sprint 2 Torsdag uge 16.
 - DCD (MVVM)
 - Pakkediagram
 - SD
-- Relationel -> UML -> SQL Databasemodel
+- Relationel Databasemodel
+- UML Databasemodel
 
-## Sprint 2 (DONE) - ...
+## Sprint 2 (DONE) - Torsdag uge 16
+Vi har brugt det meste af uge 16 på at lave artefakter og klargøring af implementering, samt lavet ændringer på vores klasser i domænemodellen og ændret de andre artefakter heraf.
+Derudover har vi haft et møde med vores sparringsteam og fået snakket med dem.
 
-### Sprint 2 (Sprint Retrospective Meeting) - ...
+### Sprint 2 (Sprint Retrospective Meeting) - Torsdag uge 16    
+* Vi har gennemgået de udførte sprint items fra vores andet sprint. Vi har lavet rettelser og færdiggjort de seks artefakter.
 
 ### Sprint 2 - Definition of Done 
-
-- Artefakterne er blevet udarbejdet og dokumenteret.
-- At der er blevet oprettet mindst 3 softwaredesignklasser i designklassediagrammet. 
+* Artefakterne er udarbejdet og dokumenteret
+* Wireframe er udarbejdet
+* Diagrammer er oprettet og er tjekket igennem (DCD, Pakkediagram, SD, Relation Datbasemodel og UML Databasemodel)
+* Kode er ikke påkrævet i denne sprint - fokus på design.
 
 # Sprint 3 - Uge 18
-- C# implementering 
-- Unittest (Automatiseret)
+- SQL Databasemodel 
+- C# implementering med fokus på UI
 
 
 ## Sprint 3 (DONE) - ...
@@ -65,9 +68,21 @@ Vi starter på sprint 2 Torsdag uge 16.
 
 
 ### Sprint 3 - Definition of Done 
+* Der er udarbejdet SQL Databasemodel
+* C# implementering med fokus på UI er færdiggjort (View er lavet)
 
 
+# Sprint 4 - Uge 19
+- Unittest (Automatiseret)
 
+
+## Sprint 4 (DONE) - ...
+
+ 
+### Sprint 4 (Sprint Retrospective Meeting) - ...
+
+
+### Sprint 4 - Definition of Done 
 
 
 
