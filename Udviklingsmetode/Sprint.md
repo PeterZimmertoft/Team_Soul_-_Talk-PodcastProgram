@@ -1,3 +1,5 @@
+Scum board: https://trello.com/b/g5Dtst60/scrum-board-soultalk
+
 # Pre-Sprint - uge 13
 
 * Problemstilling
