@@ -1,0 +1,84 @@
+@startuml - UML DatabaseModel for SoulAndTalk
+hide circle
+
+/'Relationer
+SPAREPARTS(<ins>SparePartId</ins> SparePartType, SparePartAmount)
+STATION(<ins>StationId</ins>, StationType, StationsName, *SparePartId*)
+BRAKECALIPER(<ins>CaliperId</ins>, CaliperType, CaliperStatus, Barcode, CaliperNumber, OrderNumber, Note, *StationId*)
+'/
+class "GUEST" <<table>>{
+    {static} <<PK>> GuestId : Int
+    {field} Name : NVarChar(50)
+    {field} Phone : Decimal(12, 0)
+    {field} Email : NVarChar(50)
+    {field} ConsentStatus : NVarChar(50)
+    //<<FK>> CitizenId : Int//
+    {method} <<PK>> PK_GUEST()
+}
+
+class "CITIZEN" <<table>>{
+    {static} <<PK>> CitizenId : Int
+    {field} Name : NVarChar(50)
+    {field} SSN : Int(10)
+    {field} WorkStatus : NVarChar(50)
+    {field} WorkType : NVarChar(50)
+    {field} ConsentStatus : Bit
+    {field} CurrentStatus : NVarChar(50)
+    {field} SpecialConsiderations : NVarChar(255)
+    //<<FK>> CaseOfficerId : Int//
+    {method} <<PK>> PK_CITIZEN()
+    {method} <<FK>> FK_CITIZEN_CASE_OFFICER()
+}
+
+class "LOCAL_AUTHORITY" <<table>>{
+    {static} <<PK>> LocalAuthorityId : Int
+    {field} LocalAuthorityName : NVarChar(50)
+    {field} EANNumber : NVarChar(13)
+    {method} <<PK>> PK_LOCAL_AUTHORITY()
+}
+
+class "CASE_OFFICER" <<table>>{
+    {static} <<PK>> CaseOfficerId : Int
+    {field} Name : NVarChar(50)
+    {field} Department : NVarChar(50)
+    {field} Phone : Decimal(12, 0)
+    {field} Email : NVarChar(50)
+    //<<FK>> LocalAuthorityId : Int//
+    {method} <<PK>> PK_CASE_OFFICER()
+    {method} <<FK>> FK_CASE_OFFICER_LOCAL_AUTHORITY()
+    
+}
+
+class "PODCAST_EPISODE" <<table>>{
+    {static} <<PK>> PodcastEpisodeId : Int
+    {field} Title : NVarChar(50)
+    {field} Date : DateTime2
+    {field} Duration : Time
+    {field} Status : NVarChar(255)
+    {field} MeetingPlace : NVarChar(255)
+    {field} Note : NVarChar(255)
+    //<<FK>> CaseOfficerId : Int//
+    {method} <<PK>> PK_PODCAST_EPISODE()
+    {method} <<FK>> FK_PODCAST_EPISODE_CASE_OFFICER()
+}
+
+class "PODCAST_EPISODE_GUEST" <<table>>{
+    {static} <<PK>> ID : Int
+    //<<FK>> PodcastEpisodeId : Int//
+    //<<FK>> GuestId : Int// 
+    {method} <<PK>> PK_PODCAST_EPISODE_GUEST()
+    {method} <<FK>> FK_PODCAST_EPISODE()
+    {method} <<FK>> FK_GUEST
+}
+
+
+'relationer'
+LOCAL_AUTHORITY "1" -- "0..*" CASE_OFFICER
+CASE_OFFICER "1" -- "0..*" PODCAST_EPISODE
+CASE_OFFICER "1" -- "0..*" CITIZEN
+CITIZEN "1" -- "1" GUEST
+PODCAST_EPISODE "0..*" -- "0..*" PODCAST_EPISODE_GUEST
+PODCAST_EPISODE_GUEST "1..*" -- "1..*" GUEST
+
+
+@enduml
