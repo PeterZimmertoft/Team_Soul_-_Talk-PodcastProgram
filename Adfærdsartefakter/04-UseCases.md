@@ -2,7 +2,7 @@
 
 Denne use case beskriver, hvordan en ny borgerprofil oprettes i systemet, så de senere kan tilknyttes podcast-episoder.
 
-**Aktør:** Product Owner (PO)
+**Aktør:** Podcast Owner (PO)
 
 **Mål:** At oprette en ny borgerprofil i systemet med nødvendige oplysninger.
 
@@ -14,32 +14,24 @@ Denne use case beskriver, hvordan en ny borgerprofil oprettes i systemet, så de
 
 **Hovedscenarie:**
 
-1. PO vælger "Gæst" i systemet.
+1. PO anmoder om at oprette en ny borgerprofil.
 
-2. Systemet viser en liste over oprettede gæster.
+2. Systemet anmoder om borgeroplysninger.
 
-3. PO vælger "Opret Gæst" i systemet.
+3. PO indsender de nødvendige oplysninger.
 
-4. PO indtaster de nødvendige oplysninger for borgeren, herunder borgerens navn, CPR-nummer, telefon og email.
+4. Systemet validerer data og kontrollerer, at borgeren ikke allerede sksisterer
+ 4A. Systemet informerer PO om fejlen og afventer rettelse.
+ 4B. Systemet påviser, at borgeren allerede eksisterer.
 
-5. PO gemmer borgerprofilen.
-
-6. Systemet kontrollerer, at de nødvendige felter er udfyldt, og at CPR-nummeret har korrekt længde.
-
-6A. Hvis et obligatorisk felt mangler, viser systemet en fejlmeddelelse og beder PO udfylde de manglende oplysninger.
-
-6B. Hvis CPR-nummeret ikke har korrekt længde, viser systemet en fejlmeddelelse og beder PO rette feltet.
-
-7. PO vælger "Gem" i systemet.
-
-8. Systemet gemmer borgerprofilen og bekræfter oprettelsen.
+5. Systemet bekræfter, at profilen er oprettet.
 
 
 **UC2: Planlæg podcast-episode**
 
 Denne use case viser, hvordan programmet skal håndtere den praktiske arbejdsgang for PO.
 
-**Aktør:** Product Owner (PO)
+**Aktør:** Podcast Owner (PO)
 
 **Mål:** At oprette og koordinere en episode med relevante deltagere og praktiske oplysninger. 
 
@@ -50,63 +42,46 @@ Denne use case viser, hvordan programmet skal håndtere den praktiske arbejdsgan
 **Postconditions:** Podcast-episoden er oprettet i systemet. 
 
 **Hovedscenarie:**
-1. PO vælger “Podcast Episode”.
+1. PO anmoder om at oprette en ny podcast-episode.
 
-2. Systemet viser en tom episodeliste.
+2. Systemet anmoder om episodedetaljer.
 
-3. PO vælger "Opret episode" i systemet.
+3. PO indsender oplysninger om episoden.
 
-4. PO angiver de relevante informationer til podcast episoden.
+4. PO identificerer de gæster, der skal deltage i episoden.
+ 4A. Den ønskede gæst findes ikke i systemet, så PO udfører UC1.
 
-7. PO vælger "Tilføj" ved gæst.
+5. Systemet tilknytter de valgte borgerprofiler til episoden.
 
-8. PO vælger en eksisterende borgerprofil, eller opretter en.
+6. PO færdiggør planlægningen.
 
-8. PO vælger "Tilføj".
-
-9. PO vælger "Gem" i den igangværende podcast episode.
-
-9. Systemet opretter episoden i Podcast vinduet og bekræfter, at data er gemt.
+7. Systemet lagrer episoden og bekræfter handlingen.
 
 
-**UC3: Rediger eksisterende gæst til podcast-episode**
+**UC3: Opdater borgerprofil**
 
-Denne use case viser processen ved at redigere en allerede eksisterende gæst til en podcast-episode.
+Denne use case viser processen ved at opdatere en allerede eksisterende borger/gæst.
 
-**Aktør:** Product Owner (PO)
+**Aktør:** Podcast Owner (PO)
 
-**Mål:** At redigere en allerede eksisterende gæst til en podcast-episode. 
+**Mål:** At ændre oplysninger på en eksisterende gæst/borger. 
 
 **Level:** User goal 
 
-**Preconditions:** PO er logget ind. Gæsten findes i systemet. Der er oprettet en podcast-episode.
+**Preconditions:** PO er logget ind. Borgeren findes i systemet.
 
 **Postconditions:** Gæsten er tilknyttet podcast-episoden.
 
 **Hovedscenarie:**
-1. PO vælger "Gæst".
+1. PO identificerer den borger, der skal redigeres.
 
-2. Systemet viser en liste eller søgning over registrerede gæster.
+2. Systemet viser de nuværende oplysninger for borgeren.
 
-3. PO vælger en eksisterende gæst og vælger "Rediger”.
+3. PO indsender de opdaterede oplysninger.
 
-4. Systemet viser gæstens eksisterende oplysninger.
+4. Systemet validerer og gemmer ændringerne.
 
-4A. Hvis gæstens oplysninger er forældede eller mangelfulde, vælger PO at opdatere dem, før gæsten tilføjes.
+5. Systemet bekræfter opdateringen.
 
-5. PO kontrollerer oplysningerne og vælger "Gem".
 
-7. PO trykker tilbage og vælger "Podcast episode".
-
-8. Systemet viser en tom episodeliste.
-
-9. PO vælger "Opret episode".
-
-10. PO vælger "Tilføj" ved gæst.
-
-11. Systemet viser en gæsteliste.
-
-12. PO vælger den redigerede gæst fra gæstelisten, og vælger "Tilføj".
-
-11. Systemet bekræfter, at gæsten er tilknyttet.
 
