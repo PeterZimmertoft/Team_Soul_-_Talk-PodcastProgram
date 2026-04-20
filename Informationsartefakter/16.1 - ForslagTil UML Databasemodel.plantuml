@@ -1,11 +1,15 @@
 @startuml - UML DatabaseModel for SoulAndTalk
 hide circle
 
-/'Relationer
-SPAREPARTS(<ins>SparePartId</ins> SparePartType, SparePartAmount)
-STATION(<ins>StationId</ins>, StationType, StationsName, *SparePartId*)
-BRAKECALIPER(<ins>CaliperId</ins>, CaliperType, CaliperStatus, Barcode, CaliperNumber, OrderNumber, Note, *StationId*)
+/'
+Forslag til ændringer efter at have kigget på det med en datamatiker:
+Underscores for læsbarhedens skyld 
+Phone fra string til decimal (og sat den til 12 cifre)
+CPR-Number til SSN (Social security number) + Ændret til Int
+Fjernet double reference fra PodcastEpisode til Guest, så kun gæsten peger på Podcastepisoden. 
+Lavet en join table mellem Guest of PodcastEpisode - skaber mange til mange forhold, fremfor 1 til mange (med fremmednøgler)
 '/
+
 class "GUEST" <<table>>{
     {static} <<PK>> GuestId : Int
     {field} Name : NVarChar(50)
