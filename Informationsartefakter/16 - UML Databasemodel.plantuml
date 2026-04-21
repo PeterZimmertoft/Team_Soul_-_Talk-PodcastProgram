@@ -34,7 +34,7 @@ class "CITIZEN" <<table>>{
 class "LOCAL_AUTHORITY" <<table>>{
     {static} <<PK>> LocalAuthorityId : Int
     {field} LocalAuthorityName : NVarChar(50)
-    {field} EANNumber : NVarChar(13)
+    {field} EANNumber : NVarChar(14)
     {method} <<PK>> PK_LOCALAUTHORITY()
 }
 
@@ -66,11 +66,11 @@ class "PODCAST_EPISODE" <<table>>{
 }
 
 'relationer'
-LOCAL_AUTHORITY "1" -- "0..*" CASE_OFFICER
-CASE_OFFICER "1" -- "0..*" PODCAST_EPISODE
-CASE_OFFICER "1" -- "0..*" CITIZEN
+LOCALAUTHORITY "1" -- "0..*" CASEOFFICER
+CASEOFFICER "1" -- "0..*" PODCASTEPISODE
+CASEOFFICER "1" -- "0..*" CITIZEN
 CITIZEN "1" -- "1" GUEST
-PODCAST_EPISODE "0..*" -- "1..*" GUEST
+PODCASTEPISODE "0..*" -- "1" GUEST
 
 
 @enduml
