@@ -1,28 +1,28 @@
-**UC1: Opret borgerprofil til podcast episode**
+**UC1: Opret profil til podcast episode**
 
-Denne use case beskriver, hvordan en ny borgerprofil oprettes i systemet, så de senere kan tilknyttes podcast-episoder.
+Denne use case beskriver, hvordan en ny profil oprettes i systemet, så de senere kan tilknyttes podcast-episoder.
 
 **Aktør:** Podcast Owner (PO)
 
-**Mål:** At oprette en ny borgerprofil i systemet med nødvendige oplysninger.
+**Mål:** At oprette en ny profil i systemet med nødvendige oplysninger.
 
 **Level:** User goal
 
-**Preconditions:** PO er logget ind. Borgeren findes ikke allerede i systemet.
+**Preconditions:** PO er logget ind. Profilen findes ikke allerede i systemet.
 
-**Postconditions:** Borgerprofilen er oprettet og kan senere knyttes til en podcast-episode.
+**Postconditions:** Profilen er oprettet og kan senere knyttes til en podcast-episode.
 
 **Hovedscenarie:**
 
-1. PO anmoder om at oprette en ny borgerprofil.
+1. PO anmoder om at oprette en ny profil.
 
-2. Systemet anmoder om borgeroplysninger.
+2. Systemet anmoder om profiloplysninger.
 
 3. PO indsender de nødvendige oplysninger.
 
-4. Systemet validerer data og kontrollerer, at borgeren ikke allerede sksisterer
+4. Systemet validerer data og kontrollerer, at profilen ikke allerede sksisterer
  4A. Systemet informerer PO om fejlen og afventer rettelse.
- 4B. Systemet påviser, at borgeren allerede eksisterer.
+ 4B. Systemet påviser, at profilen allerede eksisterer.
 
 5. Systemet bekræfter, at profilen er oprettet.
 

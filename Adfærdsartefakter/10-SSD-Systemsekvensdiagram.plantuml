@@ -1,23 +1,26 @@
 @startuml SSD 
-title <u>UC1: Opret borgerprofil til podcast episode  </u>
+title <u>UC1: Opret profil til podcast episode  </u>
 
-Actor ":PO" as PO
+Actor ":Podcast Owner" as PO
 participant "<u>:System</u>" as System
 
-PO -> System: OpretBorger(navn, telefon, email)
-PO -> System: AngivJobStatus(jobStatus) og Hensyn(hensynInformationer)
-PO -> System: GemBorger (navn, telefon, email)
+PO -> System: OpretProfil(navn, telefon, email)
 
-alt informationer godkendt
-System --> PO: Informationer er korrekte
+PO -> System: GemProfil (navn, telefon, email)
 
-else Informationer blev ikke godkendt
-
-System --> PO: Informationer er inkorrekte
-PO -> System: PO indtaster manglende informationer
-PO -> System: GemBorger (navn, telefon, email)
+opt Hvis profil er en borger
+    PO -> System: tilføjBorgerInformationer(CPR,jobStatus, osv.)
+    
+    loop Valideringsfejl eller profil findes (BorgerInformationer)
+        System -->> PO: Viser Fejlmeddelelse
+        PO -> System: retValideringsfejl(Borgerinformationer rettes)
+    else Succes
+        PO -> System: gemProfil()
+        
+    end
 end
-System --> PO: Borgerprofil er gemt
+
+System -->> PO: Profil gemt
 
 
 hide footbox
