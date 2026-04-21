@@ -1,18 +1,21 @@
 @startuml - UML DatabaseModel for SoulAndTalk
 hide circle
 
-/'Relationer
-SPAREPARTS(<ins>SparePartId</ins> SparePartType, SparePartAmount)
-STATION(<ins>StationId</ins>, StationType, StationsName, *SparePartId*)
-BRAKECALIPER(<ins>CaliperId</ins>, CaliperType, CaliperStatus, Barcode, CaliperNumber, OrderNumber, Note, *StationId*)
+/'
+Forslag til ændringer efter at have kigget på det med en datamatiker:
+Underscores for læsbarhedens skyld 
+Phone fra string til decimal (og sat den til 12 cifre)
+CPR-Number til SSN (Social security number) + Ændret til Int
+Fjernet double reference fra PodcastEpisode til Guest, så kun gæsten peger på Podcastepisoden. 
+Lavet en join table mellem Guest of PodcastEpisode - skaber mange til mange forhold, fremfor 1 til mange (med fremmednøgler)
 '/
+
 class "GUEST" <<table>>{
     {static} <<PK>> GuestId : Int
     {field} Name : NVarChar(50)
-    {field} Phone : NVarChar(12)
+    {field} Phone : Decimal(12, 0)
     {field} Email : NVarChar(50)
     {field} ConsentStatus : NVarChar(50)
-    //<<FK>> PodcastEpisodeId : Int//
     //<<FK>> CitizenId : Int//
     {method} <<PK>> PK_GUEST()
 }
@@ -20,7 +23,7 @@ class "GUEST" <<table>>{
 class "CITIZEN" <<table>>{
     {static} <<PK>> CitizenId : Int
     {field} Name : NVarChar(50)
-    {field} CprNumber : NVarChar(10)
+    {field} SSN : Int(10)
     {field} WorkStatus : NVarChar(50)
     {field} WorkType : NVarChar(50)
     {field} ConsentStatus : Bit
@@ -28,25 +31,25 @@ class "CITIZEN" <<table>>{
     {field} SpecialConsiderations : NVarChar(255)
     //<<FK>> CaseOfficerId : Int//
     {method} <<PK>> PK_CITIZEN()
-    {method} <<FK>> FK_CITIZEN_CASEOFFICER()
+    {method} <<FK>> FK_CITIZEN_CASE_OFFICER()
 }
 
 class "LOCAL_AUTHORITY" <<table>>{
     {static} <<PK>> LocalAuthorityId : Int
     {field} LocalAuthorityName : NVarChar(50)
-    {field} EANNumber : NVarChar(14)
-    {method} <<PK>> PK_LOCALAUTHORITY()
+    {field} EANNumber : NVarChar(13)
+    {method} <<PK>> PK_LOCAL_AUTHORITY()
 }
 
 class "CASE_OFFICER" <<table>>{
     {static} <<PK>> CaseOfficerId : Int
     {field} Name : NVarChar(50)
     {field} Department : NVarChar(50)
-    {field} Phone : NVarChar(12)
+    {field} Phone : Decimal(12, 0)
     {field} Email : NVarChar(50)
     //<<FK>> LocalAuthorityId : Int//
-    {method} <<PK>> PK_CASEOFFICER()
-    {method} <<FK>> FK_CASEOFFICER_LOCALAUTHORITY()
+    {method} <<PK>> PK_CASE_OFFICER()
+    {method} <<FK>> FK_CASE_OFFICER_LOCAL_AUTHORITY()
     
 }
 
@@ -58,19 +61,28 @@ class "PODCAST_EPISODE" <<table>>{
     {field} Status : NVarChar(255)
     {field} MeetingPlace : NVarChar(255)
     {field} Note : NVarChar(255)
-    //<<FK>> GuestId : Int//
     //<<FK>> CaseOfficerId : Int//
-    {method} <<PK>> PK_PODCASTEPISODE()
-    {method} <<FK>> FK_PODCASTEPISODE_GUEST()
-    {method} <<FK>> FK_PODCASTEPISODE_CASEOFFICER()
+    {method} <<PK>> PK_PODCAST_EPISODE()
+    {method} <<FK>> FK_PODCAST_EPISODE_CASE_OFFICER()
 }
 
+class "PODCAST_EPISODE_GUEST" <<table>>{
+    {static} <<PK>> ID : Int
+    //<<FK>> PodcastEpisodeId : Int//
+    //<<FK>> GuestId : Int// 
+    {method} <<PK>> PK_PODCAST_EPISODE_GUEST()
+    {method} <<FK>> FK_PODCAST_EPISODE()
+    {method} <<FK>> FK_GUEST
+}
+
+
 'relationer'
-LOCALAUTHORITY "1" -- "0..*" CASEOFFICER
-CASEOFFICER "1" -- "0..*" PODCASTEPISODE
-CASEOFFICER "1" -- "0..*" CITIZEN
+LOCAL_AUTHORITY "1" -- "0..*" CASE_OFFICER
+CASE_OFFICER "1" -- "0..*" PODCAST_EPISODE
+CASE_OFFICER "1" -- "0..*" CITIZEN
 CITIZEN "1" -- "1" GUEST
-PODCASTEPISODE "0..*" -- "1" GUEST
+PODCAST_EPISODE "0..*" -- "0..*" PODCAST_EPISODE_GUEST
+PODCAST_EPISODE_GUEST "1..*" -- "1..*" GUEST
 
 
 @enduml
