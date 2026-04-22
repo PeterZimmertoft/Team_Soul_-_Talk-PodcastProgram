@@ -12,5 +12,15 @@ namespace Soul_Talk.Model
         private string _phone {  get; set; }
         private string _email { get; set; }
 
+    
+
+    public CaseOfficer(int CaseOfficerId, string Name, string Department, string phone, string email)
+        {
+            this.CaseOfficerId = CaseOfficerId;
+            this.Name = Name;
+            this.Department = Department;
+            this._phone = phone;
+            this._email = email;
+       }
     }
 }
