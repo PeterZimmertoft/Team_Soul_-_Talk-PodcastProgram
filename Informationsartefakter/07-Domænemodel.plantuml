@@ -41,7 +41,7 @@ class Sagsbehandler{
 
 
 
-PodcastEpisode "0..*" -- "1..*" Gæst 
+PodcastEpisode "0..*" -- "0..*" Gæst 
 Sagsbehandler "1" -- "0..*" PodcastEpisode
 Borger "0..1" -- "1" Gæst
 Sagsbehandler "0..*" -- "1"Kommune
