@@ -35,8 +35,8 @@ namespace Soul_Talk.Persistence__Repositories_
             cmd.Parameters.AddWithValue("@ConsentStatus", guest.ConsentStatus);
 
             cmd.ExecuteNonQuery();
-        } 
-               
         }
+
+    }
 }
 
