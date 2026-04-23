@@ -11,6 +11,9 @@
             <ColumnDefinition Width="29*"/>
             <ColumnDefinition Width="371*"/>
         </Grid.ColumnDefinitions>
+        <Label Content="Soul and Talk" HorizontalAlignment="Left" Margin="128,56,0,0" VerticalAlignment="Top" Height="104" Width="428" FontSize="72" Grid.Column="1"/>
+        <Button Grid.Column="1" Content="Podcast Episode" HorizontalAlignment="Left" Margin="61,217,0,0" VerticalAlignment="Top" Height="79" Width="101"/>
+        <Button Grid.Column="1" Content="Gæst" HorizontalAlignment="Left" Margin="514,217,0,0" VerticalAlignment="Top" Height="79" Width="101"/>
 
     </Grid>
 </Window>
