@@ -5,15 +5,20 @@ using System.Text;
 using Microsoft.Data.SqlClient;
 using Soul_Talk.Model;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
     public class GuestRepository
     {
         private readonly string _connectionString;
+        private List<Guest> guests = new List<Guest>();
 
         public GuestRepository(string connectionString)
         {
+            IConfigurationRoot config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
             _connectionString = connectionString;
         }
 
