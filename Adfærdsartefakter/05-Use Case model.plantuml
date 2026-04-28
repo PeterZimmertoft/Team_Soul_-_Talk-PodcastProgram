@@ -2,7 +2,8 @@
 @startsalt "Use Case Model for Soul&Talk"
 {#
   **Use Case # ** | **Use Case Navn**
-  UC1 | Opret borgerprofil til podcast episode
+  UC1 | Opret profil til podcast episode
   UC2 | Planlæg podcast-episode
-  UC3 | Rediger eksisterende gæst til podcast-episode
+  UC3 | Rediger eksisterende profil til podcast-episode
+}
 @enduml

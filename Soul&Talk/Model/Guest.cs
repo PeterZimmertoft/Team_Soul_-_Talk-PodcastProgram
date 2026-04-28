@@ -8,16 +8,17 @@ namespace Soul_Talk.Model
     {
         public int GuestId {  get; set; }
         public string Name {  get; set; }
-        private string phone {  get; set; }
-        private string email {  get; set; }
-        public bool ConsentStatus {  get; set; }
+        public string Phone {  get; set; }
+        public string Email {  get; set; }
 
-        public Guest(int id)
+        public Guest(int GuestId, string Name, string Phone, string Email)
         {
-            
+            this.GuestId = GuestId;
+            this.Name = Name;
+            this.Phone = Phone;
+            this.Email = Email;
         }
 
-
-        
+        public Guest() { }
     }
 }

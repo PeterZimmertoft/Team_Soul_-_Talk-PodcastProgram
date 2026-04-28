@@ -55,12 +55,12 @@ Derudover har vi haft et møde med vores sparringsteam og fået snakket med dem.
 ### Sprint 2 - Definition of Done 
 * Artefakterne er udarbejdet og dokumenteret
 * Wireframe er udarbejdet
-* Diagrammer er oprettet og er tjekket igennem (DCD, Pakkediagram, SD, Relation Datbasemodel og UML Databasemodel)
+* Diagrammer er oprettet og er tjekket igennem (rettet med feedback fra undervisere) (DCD, Pakkediagram, SD, Relation Datbasemodel og UML Databasemodel)
 * Kode er ikke påkrævet i denne sprint - fokus på design.
 
 # Sprint 3 - Uge 18
 - SQL Databasemodel 
-- C# implementering med fokus på UI
+- C# implementering (Domain - Application/Persistence layer - View layer)
 
 
 ## Sprint 3 (DONE) - ...
@@ -71,10 +71,11 @@ Derudover har vi haft et møde med vores sparringsteam og fået snakket med dem.
 
 ### Sprint 3 - Definition of Done 
 * Der er udarbejdet SQL Databasemodel
-* C# implementering med fokus på UI er færdiggjort (View er lavet)
+* C# implementering er færdiggjort
 
 
 # Sprint 4 - Uge 19
+- C# implementering (View - ViewModel layer)
 - Unittest (Automatiseret)
 
 
