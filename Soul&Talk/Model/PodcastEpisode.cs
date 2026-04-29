@@ -10,9 +10,9 @@ namespace Soul_Talk.Model
         public string Title { get; set; }
         public DateTime Date { get; set; }
         public int Duration { get; set; }
-        private string _status { get; set; }
-        private string _meetingPlace { get; set; }
-        private string _note { get; set; }
+        public string _status { get; private set; }
+        public string _meetingPlace { get; private set; }
+        public string _note { get; private set; }
 
         public PodcastEpisode(int podcastEpisodeID, string title, DateTime date, int duration, string status, string meetingPlace, string note)
         {

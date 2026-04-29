@@ -9,8 +9,8 @@ namespace Soul_Talk.Model
         public int CaseOfficerId {  get; set; }
         public string Name { get; set; }
         public string Department { get; set; }
-        private string _phone {  get; set; }
-        private string _email { get; set; }
+        public string _phone {  get; private set; }
+        public string _email { get; private set; }
 
     
 

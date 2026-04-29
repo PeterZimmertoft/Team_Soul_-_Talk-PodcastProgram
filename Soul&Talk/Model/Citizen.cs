@@ -4,28 +4,29 @@ using System.Text;
 
 namespace Soul_Talk.Model
 {
-    public class Citizen
+    public class Citizen : Guest
     {
         public int CitizenId {  get; set; }
         public string Name { get; set; }
-        private string _cprNumber { get; set; }
-        private string _workStatus { get; set; }
-        private string _workType { get; set; }
-        private string _consentStatus { get; set; }
-        private string _currentStatus { get; set; }
-        private string _specialConsiderations { get; set; }
+        public string _cprNumber { get; private set; }
+        public string _workStatus { get; set; }
+        public string _workType { get; private set; }
+        public string _consentStatus { get; private set; }
+        public string _currentStatus { get; private set; }
+        public string _specialConsiderations { get; private set; }
     
 
-    public Citizen(int CitizenId, string Name, string cprNumber, string workStatus, string workType, string consentStatus, string currentStatus, string specialConsiderations)
+    public Citizen(int CitizenId, string Name, string Phone, string Email, string _cprNumber, string _workStatus, string _workType, string _consentStatus, string _currentStatus, string _specialConsiderations) :
+            base(CitizenId, Name, Phone, Email)
         {
             this.CitizenId = CitizenId;
             this.Name = Name;
-            this._cprNumber = cprNumber;
-            this._workStatus = workStatus;
-            this._workType = workType;
-            this._consentStatus = consentStatus;
-            this._currentStatus = currentStatus;
-            this._specialConsiderations = specialConsiderations;
+            this._cprNumber = _cprNumber;
+            this._workStatus = _workStatus;
+            this._workType = _workType;
+            this._consentStatus = _consentStatus;
+            this._currentStatus = _currentStatus;
+            this._specialConsiderations = _specialConsiderations;
         }
     }
 }

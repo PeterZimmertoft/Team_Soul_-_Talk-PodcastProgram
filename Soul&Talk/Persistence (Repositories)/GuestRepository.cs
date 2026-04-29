@@ -96,7 +96,7 @@ namespace Soul_Talk.Persistence__Repositories_
             return guest;
         }
 
-        public List<Guest> GetAll()
+        public List<Guest> GetAllGuests()
         {
             List<Guest> guests = new List<Guest>();
             using (SqlConnection connection = new SqlConnection(_connectionString))

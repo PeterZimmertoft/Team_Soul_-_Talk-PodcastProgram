@@ -6,9 +6,9 @@ namespace Soul_Talk.Model
 {
     public class LocalAuthority
     {
-        private int _localAuthorityId {  get; set; }
-        private string _localAuthorityName { get; set; }
-        private string _eanNumber { get; set; }
+        public int _localAuthorityId {  get; private set; }
+        public string _localAuthorityName { get; private set; }
+        public string _eanNumber { get; private set; }
 
         public LocalAuthority(int localAuthorityId, string localAuthorityName, string eanNumber)
         {
