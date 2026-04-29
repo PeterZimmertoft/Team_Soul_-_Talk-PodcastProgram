@@ -15,11 +15,16 @@ namespace Soul_Talk.View
     /// <summary>
     /// Interaction logic for GuestView.xaml
     /// </summary>
-    public partial class GuestView : Window
+    public partial class GuestView : UserControl
     {
         public GuestView()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

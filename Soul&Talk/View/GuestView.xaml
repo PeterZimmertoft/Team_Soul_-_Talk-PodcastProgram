@@ -1,12 +1,319 @@
-﻿<Window x:Class="Soul_Talk.View.GuestView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Soul_Talk.View"
-        mc:Ignorable="d"
-        Title="GuestView" Height="450" Width="800">
-    <Grid>
-        
+﻿<UserControl x:Class="Soul_Talk.View.GuestView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Height="617" Width="873">
+
+    <Grid Margin="40" Background="White">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,25">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Gæster"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       VerticalAlignment="Center" FontFamily="Book Antiqua"/>
+
+            <Button
+                    Content="Tilbage"
+                    Width="90"
+                    Height="28"
+                    Command="{Binding BackCommand}"
+                    Background="White"
+                    BorderBrush="Black" Grid.ColumnSpan="2" Margin="693,5,10,4" FontFamily="Book Antiqua"/>
+        </Grid>
+
+        <!-- Main content -->
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <!-- Mindre gæsteliste -->
+                <ColumnDefinition Width="230"/>
+                <ColumnDefinition Width="25"/>
+                <!-- Mere plads til detaljer -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Venstre side: gæsteliste -->
+            <Border Grid.Column="0"
+                    BorderBrush="#DDDDDD"
+                    BorderThickness="1"
+                    Padding="15"
+                    Background="White">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="Gæsteliste"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,15" FontFamily="Book Antiqua"/>
+
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding Guests}"
+                             SelectedItem="{Binding SelectedGuest}" FontFamily="Book Antiqua">
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10"
+                                        Margin="0,0,0,8"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1"
+                                        Background="White">
+
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="15"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap"/>
+
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                </Grid>
+            </Border>
+
+            <!-- Højre side: handlinger, valgt gæst og borgeroplysninger -->
+            <Border Grid.Column="2"
+                    BorderBrush="#DDDDDD"
+                    BorderThickness="1"
+                    Padding="20"
+                    Background="White">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+
+                        <!-- Handlinger -->
+                        <TextBlock Text="Handlinger"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,20" FontFamily="Book Antiqua"/>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,0,25">
+
+                            <Button Content="Opret ny gæst"
+                                    Width="120"
+                                    Height="30"
+                                    Margin="0,0,10,0"
+                                    Command="{Binding CreateGuestCommand}"
+                                    Background="White"
+                                    BorderBrush="Black" FontFamily="Book Antiqua"/>
+
+                            <Button Content="Rediger valgt gæst"
+                                    Width="135"
+                                    Height="30"
+                                    Margin="0,0,10,0"
+                                    Command="{Binding EditGuestCommand}"
+                                    Background="White"
+                                    BorderBrush="Black" FontFamily="Book Antiqua"/>
+
+                            <Button Content="Slet valgt gæst"
+                                    Width="120"
+                                    Height="30"
+                                    Command="{Binding DeleteGuestCommand}"
+                                    Background="#FFFF7575"
+                                    BorderBrush="Black" FontFamily="Book Antiqua"/>
+
+                        </StackPanel>
+
+                        <!-- Valgt gæst -->
+                        <Border BorderBrush="#E0E0E0"
+                                BorderThickness="1"
+                                Padding="15"
+                                Margin="0,0,0,15"
+                                Background="White" Height="319">
+
+                            <StackPanel>
+
+                                <TextBlock Text="Valgt gæst:"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,15" FontFamily="Book Antiqua"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140"/>
+                                        <ColumnDefinition Width="28*"/>
+                                        <ColumnDefinition Width="279*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="0"
+                                               Text="Navn:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10" FontFamily="Book Antiqua"/>
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedGuest.Name}"
+                                               Margin="0,0,0,10" Grid.ColumnSpan="2" FontFamily="Book Antiqua"/>
+
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="0"
+                                               Text="Telefon:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10" FontFamily="Book Antiqua"/>
+
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedGuest.Phone}"
+                                               Margin="0,0,0,10" FontFamily="Book Antiqua" Grid.ColumnSpan="2"/>
+
+                                    <TextBlock Grid.Row="2"
+                                               Grid.Column="0"
+                                               Text="Email:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10" FontFamily="Book Antiqua"/>
+
+                                    <TextBlock Grid.Row="2"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedGuest.Email}"
+                                               Margin="0,0,0,10" FontFamily="Book Antiqua" Grid.ColumnSpan="2"/>
+
+                                </Grid>
+
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Borgeroplysninger -->
+                        <Border BorderBrush="#E0E0E0"
+                                BorderThickness="1"
+                                Padding="15"
+                                Margin="0,0,0,15"
+                                Background="White">
+
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedCitizen}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+
+                            <StackPanel>
+
+                                <TextBlock Text="Borgeroplysninger:"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="0"
+                                               Text="CPR-nummer:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedCitizen.CprNumber}"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="0"
+                                               Text="Jobstatus:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedCitizen.WorkStatus}"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="2"
+                                               Grid.Column="0"
+                                               Text="Arbejdstype:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="2"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedCitizen.WorkType}"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="3"
+                                               Grid.Column="0"
+                                               Text="Samtykkestatus:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="3"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedCitizen.ConsentStatus}"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="4"
+                                               Grid.Column="0"
+                                               Text="Nuværende status:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="4"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedCitizen.CurrentStatus}"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="5"
+                                               Grid.Column="0"
+                                               Text="Særlige hensyn:"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,10"/>
+
+                                    <TextBlock Grid.Row="5"
+                                               Grid.Column="1"
+                                               Text="{Binding SelectedCitizen.SpecialConsiderations}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,0,0,10"/>
+
+                                </Grid>
+
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+            </Border>
+
+        </Grid>
+
     </Grid>
-</Window>
+</UserControl>

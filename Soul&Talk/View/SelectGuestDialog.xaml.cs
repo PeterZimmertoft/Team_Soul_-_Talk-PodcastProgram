@@ -12,12 +12,9 @@ using System.Windows.Shapes;
 
 namespace Soul_Talk.View
 {
-    /// <summary>
-    /// Interaction logic for SelectGuestView.xaml
-    /// </summary>
-    public partial class SelectGuestView : Window
+    public partial class SelectGuestDialog : Window
     {
-        public SelectGuestView()
+        public SelectGuestDialog()
         {
             InitializeComponent();
         }

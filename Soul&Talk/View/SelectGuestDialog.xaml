@@ -1,0 +1,137 @@
+﻿<Window x:Class="Soul_Talk.View.SelectGuestDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Vælg gæst"
+        Height="435"
+        Width="583"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="25" Background="White">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0"
+                   Text="Vælg gæst"
+                   FontSize="22"
+                   FontWeight="Bold"
+                   Margin="0,0,0,20" FontFamily="Book Antiqua"/>
+
+        <!-- Content -->
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Venstre side: alle oprettede gæster -->
+            <Border Grid.Column="0"
+                    BorderBrush="#DDDDDD"
+                    BorderThickness="1"
+                    Padding="15"
+                    Background="White">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="Alle gæster"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,15" FontFamily="Book Antiqua"/>
+
+                    <ListBox Grid.Row="1"
+                             ItemsSource="{Binding Guests}"
+                             SelectedItem="{Binding SelectedGuest}">
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10"
+                                        Margin="0,0,0,8"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1"
+                                        Background="White">
+
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="15"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap"/>
+
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                </Grid>
+            </Border>
+
+            <!-- Højre side: valgt gæst -->
+            <Border Grid.Column="2"
+                    BorderBrush="#DDDDDD"
+                    BorderThickness="1"
+                    Padding="15"
+                    Background="White">
+
+                <StackPanel>
+
+                    <TextBlock Text="Valgt gæst"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,15" FontFamily="Book Antiqua"/>
+
+                    <TextBlock Text="Navn:"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding SelectedGuest.Name}"
+                               Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Telefon:"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding SelectedGuest.Phone}"
+                               Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Email:"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding SelectedGuest.Email}"
+                               Margin="0,0,0,12"/>
+
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <!-- Knapper -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,0">
+
+            <Button Content="Gem"
+                    Width="100"
+                    Height="32"
+                    Margin="0,0,10,0"
+                    Command="{Binding ConfirmGuestSelectionCommand}"
+                    Background="White"
+                    BorderBrush="Black" TextBlock.FontFamily="Book Antiqua"/>
+
+            <Button Content="Annuller"
+                    Width="100"
+                    Height="32"
+                    Command="{Binding CancelCommand}"
+                    Background="White"
+                    BorderBrush="Black" TextBlock.FontFamily="Book Antiqua"/>
+
+        </StackPanel>
+
+    </Grid>
+</Window>

@@ -12,10 +12,7 @@ using System.Windows.Shapes;
 
 namespace Soul_Talk.View
 {
-    /// <summary>
-    /// Interaction logic for CreateGuestView.xaml
-    /// </summary>
-    public partial class CreateGuestView : Window
+    public partial class CreateGuestView : UserControl
     {
         public CreateGuestView()
         {

@@ -1,21 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using Soul_Talk.Commands;
+using Soul_Talk.View;
+
 
 namespace Soul_Talk.ViewModel
 {
     public class MainViewModel : BaseViewModel
     {
-        public BaseViewModel CurrentViewmodel {  get; set; }
-         
+        private BaseViewModel _currentViewModel;
+
+        public BaseViewModel CurrentViewModel
+        {
+            get { return _currentViewModel; }
+            set
+            {
+                _currentViewModel = value;
+                OnPropertyChanged(nameof(CurrentViewModel));
+            }
+        }
+
         public ICommand ShowMainViewCommand { get; set; }
         public ICommand ShowGuestViewCommand { get; set; }
         public ICommand ShowPodcastEpisodeViewCommand { get; set; }
         public ICommand ShowCreateGuestViewCommand { get; set; }
         public ICommand ShowCreatePodcastEpisodeViewCommand { get; set; }
 
-        
         public MainViewModel()
         {
             ShowMainViewCommand = new RelayCommand(_ => ShowMainView());
@@ -24,36 +33,30 @@ namespace Soul_Talk.ViewModel
             ShowCreateGuestViewCommand = new RelayCommand(_ => ShowCreateGuestView());
             ShowCreatePodcastEpisodeViewCommand = new RelayCommand(_ => ShowCreatePodcastEpisodeView());
         }
+
         public void ShowMainView()
         {
             CurrentViewModel = null;
-            OnPropertyChanged(nameof(CurrentViewModel));
         }
 
         public void ShowGuestView()
         {
-            CurrentViewModel = new GuestViewModel(null);
-            OnPropertyChanged(nameof(CurrentViewModel));
+            CurrentViewModel = new GuestViewModel(ShowMainView, ShowCreateGuestView);
         }
 
         public void ShowPodcastEpisodeView()
         {
-            CurrentViewModel = new PodcastEpisodeViewModel(null);
-            OnPropertyChanged(nameof(CurrentViewModel));
+            CurrentViewModel = new PodcastEpisodeViewModel(ShowMainView, ShowCreatePodcastEpisodeView);
         }
 
         public void ShowCreateGuestView()
         {
-            CurrentViewModel = new CreateGuestViewModel(null, null);
-            OnPropertyChanged(nameof(CurrentViewModel));
+            CurrentViewModel = new CreateGuestViewModel(ShowGuestView);
         }
 
         public void ShowCreatePodcastEpisodeView()
         {
-            CurrentViewModel = new CreatePodcastEpisodeViewModel(null, null, null);
-            OnPropertyChanged(nameof(CurrentViewModel));
+            CurrentViewModel = new CreatePodcastEpisodeViewModel(ShowPodcastEpisodeView);
         }
-
-
     }
 }

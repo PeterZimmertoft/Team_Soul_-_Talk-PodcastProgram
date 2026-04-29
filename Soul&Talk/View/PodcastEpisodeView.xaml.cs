@@ -15,7 +15,7 @@ namespace Soul_Talk.View
     /// <summary>
     /// Interaction logic for PodcastEpisodeView.xaml
     /// </summary>
-    public partial class PodcastEpisodeView : Window
+    public partial class PodcastEpisodeView : UserControl
     {
         public PodcastEpisodeView()
         {
