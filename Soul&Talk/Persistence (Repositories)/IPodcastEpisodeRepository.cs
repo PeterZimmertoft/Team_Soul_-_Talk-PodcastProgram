@@ -12,6 +12,6 @@ namespace Soul_Talk.Persistence__Repositories_
         int AddPodcastEpisode(PodcastEpisode episode);
         void UpdatePodcastEpisode(PodcastEpisode episode);
         void DeletePodcastEpisode(int id);
-        void AddGuestToEpisode(int episodeId, int guestId);
+        int AddGuestToPodcastEpisode(int episodeId, int guestId);
     }
 }

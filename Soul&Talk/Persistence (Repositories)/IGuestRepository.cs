@@ -14,7 +14,7 @@ namespace Soul_Talk.Persistence__Repositories_
         Guest GetGuestById(int id);
 
        
-        void AddGuest(Guest guest);
+        int AddGuest(Guest guest);
 
         
         void UpdateGuest(Guest guest);

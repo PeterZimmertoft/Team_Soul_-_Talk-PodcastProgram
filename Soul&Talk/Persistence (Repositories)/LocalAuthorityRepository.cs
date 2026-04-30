@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class LocalAuthorityRepository
+    public class LocalAuthorityRepository : ILocalAuthorityRepository
     {
         private readonly string _connectionString;
         private List<Citizen> Citizens = new List<Citizen>();

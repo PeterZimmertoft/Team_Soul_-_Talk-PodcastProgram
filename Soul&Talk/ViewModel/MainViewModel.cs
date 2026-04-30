@@ -1,22 +1,26 @@
-﻿using System.Windows.Input;
+﻿using Microsoft.Extensions.Configuration;
 using Soul_Talk.Commands;
+using Soul_Talk.Model;
+using Soul_Talk.Persistence__Repositories_;
 using Soul_Talk.View;
+using System.Windows.Input;
 
 
 namespace Soul_Talk.ViewModel
 {
     public class MainViewModel : BaseViewModel
     {
-        private BaseViewModel _currentViewModel;
+       
+        private readonly IGuestRepository _guestRepository;
+        private readonly ICitizenRepository _citizenRepository;
+        private readonly IPodcastEpisodeRepository _podcastRepository;
+        private readonly ICaseOfficerRepository _caseOfficerRepository;
 
+        private BaseViewModel _currentViewModel;
         public BaseViewModel CurrentViewModel
         {
             get { return _currentViewModel; }
-            set
-            {
-                _currentViewModel = value;
-                OnPropertyChanged(nameof(CurrentViewModel));
-            }
+            set { _currentViewModel = value; OnPropertyChanged(nameof(CurrentViewModel)); }
         }
 
         public ICommand ShowMainViewCommand { get; set; }
@@ -27,6 +31,19 @@ namespace Soul_Talk.ViewModel
 
         public MainViewModel()
         {
+        
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            string connectionString = config.GetConnectionString("DefaultConnection");
+
+  
+            _guestRepository = new GuestRepository(connectionString);
+            _citizenRepository = new CitizenRepository(connectionString);
+            _podcastRepository = new PodcastEpisodeRepository(connectionString);
+            _caseOfficerRepository = new CaseOfficerRepository(connectionString);
+
             ShowMainViewCommand = new RelayCommand(_ => ShowMainView());
             ShowGuestViewCommand = new RelayCommand(_ => ShowGuestView());
             ShowPodcastEpisodeViewCommand = new RelayCommand(_ => ShowPodcastEpisodeView());
@@ -34,29 +51,26 @@ namespace Soul_Talk.ViewModel
             ShowCreatePodcastEpisodeViewCommand = new RelayCommand(_ => ShowCreatePodcastEpisodeView());
         }
 
-        public void ShowMainView()
-        {
-            CurrentViewModel = null;
-        }
+        public void ShowMainView() => CurrentViewModel = null;
 
         public void ShowGuestView()
         {
-            CurrentViewModel = new GuestViewModel(ShowMainView, ShowCreateGuestView);
+            CurrentViewModel = new GuestViewModel(_guestRepository, ShowCreateGuestView);
         }
 
         public void ShowPodcastEpisodeView()
         {
-            CurrentViewModel = new PodcastEpisodeViewModel(ShowMainView, ShowCreatePodcastEpisodeView);
+            CurrentViewModel = new PodcastEpisodeViewModel(_podcastRepository);
         }
 
         public void ShowCreateGuestView()
         {
-            CurrentViewModel = new CreateGuestViewModel(ShowGuestView);
+            CurrentViewModel = new CreateGuestViewModel(_guestRepository, _citizenRepository);
         }
 
         public void ShowCreatePodcastEpisodeView()
         {
-            CurrentViewModel = new CreatePodcastEpisodeViewModel(ShowPodcastEpisodeView);
+            CurrentViewModel = new CreatePodcastEpisodeViewModel(_podcastRepository, _guestRepository, _caseOfficerRepository);
         }
     }
 }

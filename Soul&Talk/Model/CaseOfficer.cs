@@ -12,9 +12,9 @@ namespace Soul_Talk.Model
         public string _phone {  get; private set; }
         public string _email { get; private set; }
 
-    
 
-    public CaseOfficer(int CaseOfficerId, string Name, string Department, string phone, string email)
+        public CaseOfficer() : base() { }
+        public CaseOfficer(int CaseOfficerId, string Name, string Department, string phone, string email)
         {
             this.CaseOfficerId = CaseOfficerId;
             this.Name = Name;

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class CitizenRepository
+    public class CitizenRepository : ICitizenRepository
     {
         private readonly string _connectionString;
         private List<Citizen> Citizens = new List<Citizen>();
@@ -55,7 +55,7 @@ namespace Soul_Talk.Persistence__Repositories_
         }
 
 
-        public void AddCitizen(Citizen citizen)
+        public int AddCitizen(Citizen citizen)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -75,12 +75,13 @@ namespace Soul_Talk.Persistence__Repositories_
                 cmd.Parameters.AddWithValue("@_consentStatus", citizen._consentStatus);
                 cmd.Parameters.AddWithValue("@_currentStatus", citizen._currentStatus);
                 cmd.Parameters.AddWithValue("@_specialConsiderations", citizen._specialConsiderations);
-                cmd.ExecuteNonQuery();
+                
+                return (int)cmd.ExecuteScalar();
 
 
             }
         }
-        public void updateCitizen(Citizen citizen)
+        public void UpdateCitizen(Citizen citizen)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -109,13 +110,13 @@ namespace Soul_Talk.Persistence__Repositories_
             }
         }
 
-        public void deleteCitizen(Citizen citizen)
+        public void DeleteCitizen(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("DELETE FROM Citizen WHERE CitizenId = @CitizenId", connection);
-                cmd.Parameters.AddWithValue("@CitizenId", citizen.CitizenId);
+                cmd.Parameters.AddWithValue("@CitizenId", id);
                 cmd.ExecuteNonQuery();
             }
         }

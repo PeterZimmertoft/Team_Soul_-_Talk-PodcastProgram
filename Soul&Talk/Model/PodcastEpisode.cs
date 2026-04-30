@@ -14,6 +14,7 @@ namespace Soul_Talk.Model
         public string _meetingPlace { get; private set; }
         public string _note { get; private set; }
 
+        public PodcastEpisode() : base() { }
         public PodcastEpisode(int podcastEpisodeID, string title, DateTime date, int duration, string status, string meetingPlace, string note)
         {
             this.PodcastEpisodeID = podcastEpisodeID;

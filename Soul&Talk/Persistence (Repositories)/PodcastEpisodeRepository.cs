@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class PodcastEpisodeRepository
+    public class PodcastEpisodeRepository : IPodcastEpisodeRepository
     {
         private readonly string _connectionString;
         private List<Guest> guests = new List<Guest>();
@@ -53,6 +53,33 @@ namespace Soul_Talk.Persistence__Repositories_
             }
         }
 
+        public PodcastEpisode GetPodcastEpisodeById(int id)
+        {
+            PodcastEpisode? PodcastEpisode = null;
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                SqlCommand cmd = new SqlCommand("SELECT * FROM PodcastEpisode WHERE podcastEpisodeID = @id", connection);
+                cmd.Parameters.AddWithValue("@id", id);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        PodcastEpisode = new PodcastEpisode
+                        (
+                            reader.GetInt32("podcastEpisodeID"),
+                            reader["title"] as string,
+                            (DateTime)reader["date"],
+                            reader.GetInt32("duration"),
+                            reader["status"] as string,
+                            reader["meetingPlace"] as string,
+                            reader["note"] as string
+                        );
+                    }
+                }
+            }
+            return PodcastEpisode;
+        }
 
         public PodcastEpisode GetLocalAuthorityById(int id)
         {
@@ -100,8 +127,7 @@ namespace Soul_Talk.Persistence__Repositories_
                 cmd.Parameters.AddWithValue("@meetingPlace", PodcastEpisode._meetingPlace);
                 cmd.Parameters.AddWithValue("@note", PodcastEpisode._note);
 
-                int newId = (int)cmd.ExecuteScalar();
-                return newId;
+               return (int)cmd.ExecuteScalar();
             }
         }
 
@@ -128,18 +154,18 @@ namespace Soul_Talk.Persistence__Repositories_
             }
         }
 
-        public void DeletePodcastEpisode(PodcastEpisode PodcastEpisode)
+        public void DeletePodcastEpisode(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("DELETE FROM PodcastEpisode WHERE podcastEpisodeID = @podcastEpisodeID", connection);
-                cmd.Parameters.AddWithValue("@podcastEpisodeID", PodcastEpisode.PodcastEpisodeID);
+                cmd.Parameters.AddWithValue("@podcastEpisodeID", id);
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public int AddGuestToPodcastEpisode(int podcastEpisodeID, int guestID)
+        public int AddGuestToPodcastEpisode(int podcastEpisodeId, int guestId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -150,10 +176,10 @@ namespace Soul_Talk.Persistence__Repositories_
                     "SELECT SCOPE_IDENTITY();",
                 conn
             );
-                cmd.Parameters.AddWithValue("@podcastEpisodeID", podcastEpisodeID);
-                cmd.Parameters.AddWithValue("@guestID", guestID);
-                int newId = (int)cmd.ExecuteScalar();
-                return newId;
+                cmd.Parameters.AddWithValue("@podcastEpisodeID", podcastEpisodeId);
+                cmd.Parameters.AddWithValue("@guestID", guestId);
+                
+                return (int)cmd.ExecuteScalar();
             }
         }
     }
