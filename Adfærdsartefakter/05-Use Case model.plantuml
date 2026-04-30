@@ -1,9 +1,10 @@
-@startuml "Use Case Model for Soul&Talk"
-@startsalt "Use Case Model for Soul&Talk"
+@startuml "Use Case Tabel for Soul&Talk"
+@startsalt "Use Case Tabel for Soul&Talk"
 {#
   **Use Case # ** | **Use Case Navn**
-  UC1 | Opret profil til podcast episode
-  UC2 | Planlæg podcast-episode
-  UC3 | Rediger eksisterende profil til podcast-episode
+  UC1 | Opret profil til podcastepisode
+  UC2 | Planlæg podcastepisode
+  UC3 | Opdater borgerprofil
+  UC4 | Se episodeoversigt
 }
 @enduml

@@ -1,13 +1,15 @@
 @startuml - Use Case Diagram for Soul&Talk
 left to right direction
-actor "Product Owner" as m
+actor "Podcast Owner" as m
 rectangle Soul&Talk {
-  usecase "Opret profil til podcast episode" as UC1
-  usecase "Planlæg podcast-episode" as UC2
-  usecase "Rediger eksisterende gæst til podcast-episode" as UC3
+  usecase "Opret profil til podcastepisode" as UC1
+  usecase "Planlæg podcastepisode" as UC2
+  usecase "Opdater borgerprofil" as UC3
+  usecase "Se episodeoversigt" as UC4
 }
 m --> UC1
 m --> UC2
 m --> UC3
+m --> UC4
 
 @enduml
