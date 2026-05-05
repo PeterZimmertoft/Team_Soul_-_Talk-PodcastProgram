@@ -1,4 +1,5 @@
-﻿using Soul_Talk.Model;
+﻿using Soul_Talk.Commands;
+using Soul_Talk.Model;
 using Soul_Talk.Persistence__Repositories_;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Windows.Input;
 
 namespace Soul_Talk.ViewModel
 {
-    public class CreateGuestViewModel
+    public class CreateGuestViewModel : BaseViewModel
     {
         private IGuestRepository guestRepository;
         private ICitizenRepository citizenRepository;

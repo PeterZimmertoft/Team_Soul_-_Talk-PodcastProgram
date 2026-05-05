@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class GuestRepository
+    public class GuestRepository : IGuestRepository
     {
         private readonly string _connectionString;
         private List<Guest> guests = new List<Guest>();
@@ -22,7 +22,7 @@ namespace Soul_Talk.Persistence__Repositories_
             _connectionString = connectionString;
         }
 
-        public void AddGuest(Guest guest)
+        public int AddGuest(Guest guest)
         {
             using var conn = new SqlConnection(_connectionString);
             conn.Open();
@@ -39,7 +39,7 @@ namespace Soul_Talk.Persistence__Repositories_
             cmd.Parameters.AddWithValue("@Phone", guest.Phone);
             cmd.Parameters.AddWithValue("@Email", guest.Email);
 
-            cmd.ExecuteNonQuery();
+            return (int)cmd.ExecuteScalar();
         }
 
         public void UpdateGuest(Guest guest)
@@ -60,13 +60,13 @@ namespace Soul_Talk.Persistence__Repositories_
             }
         }
 
-        public void DeleteGuest(Guest guest)
+        public void DeleteGuest(int id)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("DELETE FROM Guest WHERE GuestId = @GuestId", connection);
-                cmd.Parameters.AddWithValue("@GuestId", guest);
+                cmd.Parameters.AddWithValue("@GuestId", id);
                 cmd.ExecuteNonQuery();
             }
         }

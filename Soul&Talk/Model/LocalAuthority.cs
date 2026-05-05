@@ -10,6 +10,7 @@ namespace Soul_Talk.Model
         public string _localAuthorityName { get; private set; }
         public string _eanNumber { get; private set; }
 
+        public LocalAuthority() : base() { }
         public LocalAuthority(int localAuthorityId, string localAuthorityName, string eanNumber)
         {
             this._localAuthorityId = localAuthorityId;
@@ -17,4 +18,5 @@ namespace Soul_Talk.Model
             this._eanNumber = eanNumber;
         }
     }
+
 }

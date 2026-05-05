@@ -1,4 +1,5 @@
-﻿using Soul_Talk.Model;
+﻿using Soul_Talk.Commands;
+using Soul_Talk.Model;
 using Soul_Talk.Persistence__Repositories_;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Soul_Talk.ViewModel
         public ICommand DeleteGuestCommand { get; set; }
         public ICommand BackCommand { get; set; }
 
-        public GuestViewModel(IGuestRepository repository)
+        public GuestViewModel(IGuestRepository repository, Action showCreateGuestView)
         {
             guestRepository = repository;
             Guests = new ObservableCollection<Guest>();
