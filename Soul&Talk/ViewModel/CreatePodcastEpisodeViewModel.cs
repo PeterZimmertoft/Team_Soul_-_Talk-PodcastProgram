@@ -11,9 +11,9 @@ namespace Soul_Talk.ViewModel
 {
     public class CreatePodcastEpisodeViewModel : BaseViewModel
     {
-        private IPodcastEpisodeRepository podcastRepository;
-        private IGuestRepository guestRepository;
-        private ICaseOfficerRepository caseOfficerRepository;
+        private IRepository<PodcastEpisode> podcastRepository;
+        private IRepository<Guest> guestRepository;
+        private IRepository<CaseOfficer> caseOfficerRepository;
 
         public PodcastEpisode PodcastEpisode { get; set; }
 
@@ -24,16 +24,21 @@ namespace Soul_Talk.ViewModel
 
         public ICommand AddGuestCommand { get; set; }
         public ICommand SavePodcastEpisodeCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
+
+        private Action _goBackAction;
 
         public CreatePodcastEpisodeViewModel(
-            IPodcastEpisodeRepository podcastRepo,
-            IGuestRepository guestRepo,
-            ICaseOfficerRepository caseOfficerRepo)
+            IRepository<PodcastEpisode> podcastRepo,
+            IRepository<Guest> guestRepo,
+            IRepository<CaseOfficer> caseOfficerRepo,
+            Action goBack)
 
         {
             podcastRepository = podcastRepo;
             guestRepository = guestRepo;
             caseOfficerRepository = caseOfficerRepo;
+            _goBackAction = goBack;
 
             PodcastEpisode = new PodcastEpisode();
             CaseOfficers = new ObservableCollection<CaseOfficer>();
@@ -41,6 +46,7 @@ namespace Soul_Talk.ViewModel
 
             AddGuestCommand = new RelayCommand(g => AddGuest((Guest)g));
             SavePodcastEpisodeCommand = new RelayCommand(_ => SavePodcastEpisode());
+            CancelCommand = new RelayCommand(_ => Cancel());
         }
 
         public void AddGuest(Guest guest)
@@ -50,6 +56,9 @@ namespace Soul_Talk.ViewModel
         }
 
         public void SavePodcastEpisode() { }
-        public void Cancel() { }
+        public void Cancel() 
+        { 
+            _goBackAction?.Invoke();
+        }
     }
 }

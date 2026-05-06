@@ -20,15 +20,17 @@
                        Text="Podcast episoder"
                        FontSize="28"
                        FontWeight="Bold"
-                       VerticalAlignment="Center" FontFamily="Book Antiqua"/>
+                       VerticalAlignment="Center" />
 
-            <Button
+            <Button Grid.Column="1"
                     Content="Tilbage"
                     Width="90"
                     Height="28"
                     Command="{Binding BackCommand}"
                     Background="White"
-                    BorderBrush="Black" Grid.ColumnSpan="2" Margin="607,5,10,4" TextBlock.FontFamily="Book Antiqua"/>
+                    BorderBrush="Black"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top" />
         </Grid>
 
         <!-- Main content -->
@@ -40,7 +42,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Venstre side: episodeliste -->
+            <!-- Left Column: Episode List -->
             <Border Grid.Column="0"
                     BorderBrush="#DDDDDD"
                     BorderThickness="1"
@@ -92,7 +94,7 @@
                 </Grid>
             </Border>
 
-            <!-- Højre side: handlinger og episode-detaljer -->
+            <!-- Right Column: Actions & Details -->
             <Border Grid.Column="2"
                     BorderBrush="#DDDDDD"
                     BorderThickness="1"
@@ -102,7 +104,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
 
-                        <!-- Handlinger -->
+                        <!-- Actions -->
                         <TextBlock Text="Handlinger"
                                    FontSize="20"
                                    FontWeight="SemiBold"
@@ -136,7 +138,7 @@
 
                         </StackPanel>
 
-                        <!-- Valgt episode -->
+                        <!-- Selected Episode Details -->
                         <Border BorderBrush="#E0E0E0"
                                 BorderThickness="1"
                                 Padding="15"

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Data;
 using Microsoft.Data.SqlClient;
 using Soul_Talk.Model;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class CitizenRepository : ICitizenRepository
+    public class CitizenRepository : IRepository<Citizen>
     {
-        private readonly string _connectionString;
+        private readonly string connectionString;
         private List<Citizen> Citizens = new List<Citizen>();
 
         public CitizenRepository(string connectionString)
@@ -19,14 +15,15 @@ namespace Soul_Talk.Persistence__Repositories_
             IConfigurationRoot config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
-            _connectionString = connectionString;
+            this.connectionString = connectionString;
         }
+
 
 
         public Citizen GetCitizenById(int id)
         {
             Citizen? Citizen = null;
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM Citizen WHERE CitizenId = @Id", connection);
@@ -57,7 +54,7 @@ namespace Soul_Talk.Persistence__Repositories_
 
         public int AddCitizen(Citizen citizen)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 var cmd = new SqlCommand(
@@ -83,7 +80,7 @@ namespace Soul_Talk.Persistence__Repositories_
         }
         public void UpdateCitizen(Citizen citizen)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("UPDATE Citizen SET Name = @Name, " +
@@ -112,7 +109,7 @@ namespace Soul_Talk.Persistence__Repositories_
 
         public void DeleteCitizen(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("DELETE FROM Citizen WHERE CitizenId = @CitizenId", connection);
@@ -120,5 +117,31 @@ namespace Soul_Talk.Persistence__Repositories_
                 cmd.ExecuteNonQuery();
             }
         }
+
+        //IRepository CRUD metoder.
+            public List<Citizen> GetAll()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Citizen GetById(int id)
+            {
+                return GetCitizenById(id);
+            }
+
+            public int Add(Citizen model)
+            {
+                return AddCitizen(model);
+            }
+
+            public void Update(Citizen model)
+            {
+                UpdateCitizen(model);
+            }
+
+            public void Delete(int id)
+            {
+                DeleteCitizen(id);
+            }
+        }
     }
-}

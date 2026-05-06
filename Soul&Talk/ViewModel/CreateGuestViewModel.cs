@@ -10,8 +10,8 @@ namespace Soul_Talk.ViewModel
 {
     public class CreateGuestViewModel : BaseViewModel
     {
-        private IGuestRepository guestRepository;
-        private ICitizenRepository citizenRepository;
+        private IRepository<Guest> guestRepository;
+        private IRepository<Citizen> citizenRepository;
 
         public Guest Guest { get; set; }
         public Citizen Citizen { get; set; }
@@ -19,10 +19,13 @@ namespace Soul_Talk.ViewModel
         public ICommand SaveGuestCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public CreateGuestViewModel(IGuestRepository guestRepo, ICitizenRepository citizenRepo)
+        private Action goBack;
+
+        public CreateGuestViewModel(IRepository<Guest> guestRepo, IRepository<Citizen> citizenRepo, Action goBack)
         {
             guestRepository = guestRepo;
             citizenRepository = citizenRepo;
+            this.goBack = goBack;
 
             Guest = new Guest();
             Citizen = new Citizen();
@@ -31,7 +34,13 @@ namespace Soul_Talk.ViewModel
             CancelCommand = new RelayCommand(_ => Cancel());
         }
 
-        public void SaveGuest() { }
-        public void Cancel() { }
+        private void Cancel()
+        {
+            goBack?.Invoke();
+        }
+
+        public void SaveGuest() 
+        {
+        }
     }
 }

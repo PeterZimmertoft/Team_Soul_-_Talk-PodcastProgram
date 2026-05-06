@@ -7,6 +7,13 @@
 
     <Application.Resources>
 
+        <Style TargetType="Window">
+            <Setter Property="FontFamily" Value="Book Antiqua" />
+        </Style>
+        <Style TargetType="UserControl">
+            <Setter Property="FontFamily" Value="Book Antiqua" />
+        </Style>
+
         <DataTemplate DataType="{x:Type viewModel:GuestViewModel}">
             <view:GuestView/>
         </DataTemplate>

@@ -19,7 +19,7 @@
             <StackPanel Grid.Column="0">
                 <TextBlock Text="Opret podcast episode"
                            FontSize="28"
-                           FontWeight="Bold" FontFamily="Book Antiqua"/>
+                           FontWeight="Bold" />
 
                 <TextBlock Text="Udfyld informationerne for den nye podcast episode og tilføj eventuelle gæster."
                            FontSize="14"
@@ -32,18 +32,18 @@
                     Width="90"
                     Height="28"
                     Command="{Binding CancelCommand}"
-                    Background="White"
-                    BorderBrush="Black" TextBlock.FontFamily="Book Antiqua"/>
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top" />
         </Grid>
 
-        <!-- Formular -->
+        <!-- Podcast Form -->
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto">
 
             <StackPanel Width="620"
                         HorizontalAlignment="Left">
 
-                <!-- Episodeoplysninger -->
+                <!-- Episode Details Section -->
                 <Border BorderBrush="#DDDDDD"
                         BorderThickness="1"
                         Padding="20"
@@ -106,7 +106,7 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Tilknyttede gæster -->
+                <!-- Associated Guests List -->
                 <Border BorderBrush="#DDDDDD"
                         BorderThickness="1"
                         Padding="20"
@@ -176,7 +176,7 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Knapper -->
+                <!-- Action Buttons -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Left">
 

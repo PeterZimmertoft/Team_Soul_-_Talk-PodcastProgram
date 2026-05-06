@@ -11,7 +11,7 @@ namespace Soul_Talk.ViewModel
 {
     public class PodcastEpisodeViewModel : BaseViewModel
     {
-        private IPodcastEpisodeRepository podcastEpisodeRepository;
+        private IRepository<PodcastEpisode> podcastEpisodeRepository;
 
         public ObservableCollection<PodcastEpisode> PodcastEpisodes { get; set; }
         public PodcastEpisode SelectedPodcastEpisode { get; set; }
@@ -21,14 +21,18 @@ namespace Soul_Talk.ViewModel
         public ICommand EditPodcastEpisodeCommand { get; set; }
         public ICommand BackCommand { get; set; }
 
-        public PodcastEpisodeViewModel(IPodcastEpisodeRepository repository)
+        private Action _goBackAction;
+
+        public PodcastEpisodeViewModel(IRepository<PodcastEpisode> repository, Action goBack)
         {
             podcastEpisodeRepository = repository;
+            _goBackAction = goBack;
 
             PodcastEpisodes = new ObservableCollection<PodcastEpisode>();
 
             LoadPodcastEpisodesCommand = new RelayCommand(_ => LoadPodcastEpisodes());
             CreatePodcastEpisodeCommand = new RelayCommand(_ => CreatePodcastEpisode());
+            BackCommand = new RelayCommand(_ => goBack());
             EditPodcastEpisodeCommand = new RelayCommand(_ => EditPodcastEpisode());
             BackCommand = new RelayCommand(_ => GoBack());
         }

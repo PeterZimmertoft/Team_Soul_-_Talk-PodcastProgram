@@ -1,17 +1,13 @@
-﻿using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Data;
 using Microsoft.Data.SqlClient;
 using Soul_Talk.Model;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class CaseOfficerRepository : ICaseOfficerRepository
+    public class CaseOfficerRepository : IRepository<CaseOfficer>
     {
-        private readonly string _connectionString;
+        private readonly string connectionString;
         private List<Citizen> Citizens = new List<Citizen>();
 
         public CaseOfficerRepository(string connectionString)
@@ -19,18 +15,14 @@ namespace Soul_Talk.Persistence__Repositories_
             IConfigurationRoot config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
-            _connectionString = connectionString;
+            connectionString = connectionString;
         }
 
-
-
-
-
-        public List<CaseOfficer> GetAllCaseOfficers()
+        public List<CaseOfficer> GetAll()
         {
             List<CaseOfficer> caseOfficers = new List<CaseOfficer>();
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM CaseOfficer", connection);
@@ -55,14 +47,14 @@ namespace Soul_Talk.Persistence__Repositories_
         }
 
 
-        public CaseOfficer GetCaseOfficerById(int id)
+        public CaseOfficer GetById(int id)
         {
             CaseOfficer? caseOfficer = null;
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM CaseOfficer WHERE CaseOfficerId = @Id", connection);
-                cmd.Parameters.AddWithValue("@CaseOfficerId", id);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM CaseOfficer WHERE Id = @Id", connection);
+                cmd.Parameters.AddWithValue("@Id", id);
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
@@ -79,6 +71,22 @@ namespace Soul_Talk.Persistence__Repositories_
                 }
             }
             return caseOfficer;
+        }
+
+        //IRepository CRUD metoder.
+        public int Add(CaseOfficer model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(CaseOfficer model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

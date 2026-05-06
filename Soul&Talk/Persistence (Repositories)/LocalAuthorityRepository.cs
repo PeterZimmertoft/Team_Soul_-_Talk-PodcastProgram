@@ -9,9 +9,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class LocalAuthorityRepository : ILocalAuthorityRepository
+    public class LocalAuthorityRepository : IRepository<LocalAuthority>
     {
-        private readonly string _connectionString;
+        private readonly string connectionString;
         private List<Citizen> Citizens = new List<Citizen>();
 
         public LocalAuthorityRepository(string connectionString)
@@ -19,18 +19,14 @@ namespace Soul_Talk.Persistence__Repositories_
             IConfigurationRoot config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
-            _connectionString = connectionString;
+            this.connectionString = connectionString;
         }
 
-
-
-
-
-        public List<LocalAuthority> GetAllLocalAuthorities()
+        public List<LocalAuthority> GetAll()
         {
             List<LocalAuthority> localAuthorities = new List<LocalAuthority>();
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM LocalAuthority", connection);
@@ -53,10 +49,10 @@ namespace Soul_Talk.Persistence__Repositories_
         }
 
 
-        public LocalAuthority GetLocalAuthorityById(int id)
+        public LocalAuthority GetById(int id)
         {
             LocalAuthority? LocalAuthority = null;
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM LocalAuthority WHERE CaseOfficerId = @Id", connection);
@@ -75,6 +71,22 @@ namespace Soul_Talk.Persistence__Repositories_
                 }
             }
             return LocalAuthority;
+        }
+
+        //IRepository CRUD metoder.
+        public int Add(LocalAuthority model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(LocalAuthority model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

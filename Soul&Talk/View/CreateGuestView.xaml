@@ -23,7 +23,7 @@
             <StackPanel Grid.Column="0">
                 <TextBlock Text="Opret gæsteprofil"
                            FontSize="28"
-                           FontWeight="Bold" FontFamily="Book Antiqua"/>
+                           FontWeight="Bold" />
 
                 <TextBlock Text="Indtast gæstens oplysninger. Hvis gæsten også er borger, kan ekstra informationer udfyldes."
                            FontSize="14"
@@ -32,22 +32,21 @@
                            TextWrapping="Wrap"/>
             </StackPanel>
 
-            <Button
-                    Content="Tilbage"
-                    Width="90"
-                    Height="28"
+            <Button Content="Tilbage"
+                    Width="90" Height="28"
                     Command="{Binding CancelCommand}"
-                    Background="White"
-                    BorderBrush="Black" FontFamily="Book Antiqua" Grid.ColumnSpan="2" Margin="558,9,10,24"/>
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Grid.Column="1" />
         </Grid>
 
-        <!-- Formular -->
+        <!-- Guest Form -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
 
             <StackPanel Width="520"
                         HorizontalAlignment="Left">
 
-                <!-- Gæsteoplysninger -->
+                <!-- Guest Info Section -->
                 <Border BorderBrush="#DDDDDD"
                         BorderThickness="1"
                         Padding="20"
@@ -86,7 +85,7 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Borgeroplysninger -->
+                <!-- Citizen Info Section (Hidden by default) -->
                 <Border BorderBrush="#DDDDDD"
                         BorderThickness="1"
                         Padding="20"
@@ -143,7 +142,7 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Knapper -->
+                <!-- Action Buttons -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Left">
 

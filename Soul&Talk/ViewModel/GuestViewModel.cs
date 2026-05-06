@@ -11,7 +11,7 @@ namespace Soul_Talk.ViewModel
 {
     public class GuestViewModel : BaseViewModel
     {
-        private IGuestRepository guestRepository;
+        private IRepository<Guest> guestRepository;
 
         public ObservableCollection<Guest> Guests { get; set; }
         public Guest SelectedGuest { get; set; }
@@ -22,22 +22,23 @@ namespace Soul_Talk.ViewModel
         public ICommand DeleteGuestCommand { get; set; }
         public ICommand BackCommand { get; set; }
 
-        public GuestViewModel(IGuestRepository repository, Action showCreateGuestView)
+        private Action _goBackAction;
+
+        public GuestViewModel(IRepository<Guest> repository, Action showCreateGuestView, Action goBack)
         {
             guestRepository = repository;
+            _goBackAction = goBack;
             Guests = new ObservableCollection<Guest>();
 
             LoadGuestsCommand = new RelayCommand(_ => LoadGuests());
-            CreateGuestCommand = new RelayCommand(_ => CreateGuest());
+            CreateGuestCommand = new RelayCommand(_ => showCreateGuestView());
             EditGuestCommand = new RelayCommand(_ => EditGuest());
             DeleteGuestCommand = new RelayCommand(_ => DeleteGuest());
-            BackCommand = new RelayCommand(_ => GoBack());
+            BackCommand = new RelayCommand(_ => goBack());
         }
 
         public void LoadGuests() { }
-        public void CreateGuest() { }
         public void EditGuest() { }
         public void DeleteGuest() { }
-        public void GoBack() { }
     }
 }

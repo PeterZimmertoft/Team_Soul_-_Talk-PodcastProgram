@@ -11,10 +11,10 @@ namespace Soul_Talk.ViewModel
     public class MainViewModel : BaseViewModel
     {
        
-        private readonly IGuestRepository _guestRepository;
-        private readonly ICitizenRepository _citizenRepository;
-        private readonly IPodcastEpisodeRepository _podcastRepository;
-        private readonly ICaseOfficerRepository _caseOfficerRepository;
+        private readonly IRepository<Guest> _guestRepository;
+        private readonly IRepository<Citizen> _citizenRepository;
+        private readonly IRepository<PodcastEpisode> _podcastRepository;
+        private readonly IRepository<CaseOfficer> _caseOfficerRepository;
 
         private BaseViewModel _currentViewModel;
         public BaseViewModel CurrentViewModel
@@ -55,22 +55,22 @@ namespace Soul_Talk.ViewModel
 
         public void ShowGuestView()
         {
-            CurrentViewModel = new GuestViewModel(_guestRepository, ShowCreateGuestView);
+            CurrentViewModel = new GuestViewModel(_guestRepository, ShowCreateGuestView, ShowMainView);
         }
 
         public void ShowPodcastEpisodeView()
         {
-            CurrentViewModel = new PodcastEpisodeViewModel(_podcastRepository);
+            CurrentViewModel = new PodcastEpisodeViewModel(_podcastRepository, ShowMainView);
         }
 
         public void ShowCreateGuestView()
         {
-            CurrentViewModel = new CreateGuestViewModel(_guestRepository, _citizenRepository);
+            CurrentViewModel = new CreateGuestViewModel(_guestRepository, _citizenRepository, ShowGuestView);
         }
 
         public void ShowCreatePodcastEpisodeView()
         {
-            CurrentViewModel = new CreatePodcastEpisodeViewModel(_podcastRepository, _guestRepository, _caseOfficerRepository);
+            CurrentViewModel = new CreatePodcastEpisodeViewModel(_podcastRepository, _guestRepository, _caseOfficerRepository, ShowPodcastEpisodeView);
         }
     }
 }

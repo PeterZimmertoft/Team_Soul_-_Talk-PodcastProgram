@@ -20,29 +20,29 @@
                        Text="Gæster"
                        FontSize="28"
                        FontWeight="Bold"
-                       VerticalAlignment="Center" FontFamily="Book Antiqua"/>
+                       VerticalAlignment="Center" />
 
-            <Button
+            <Button Grid.Column="1"
                     Content="Tilbage"
                     Width="90"
                     Height="28"
                     Command="{Binding BackCommand}"
                     Background="White"
-                    BorderBrush="Black" Grid.ColumnSpan="2" Margin="693,5,10,4" FontFamily="Book Antiqua"/>
+                    BorderBrush="Black"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top" />
         </Grid>
 
         <!-- Main content -->
         <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
-                <!-- Mindre gæsteliste -->
                 <ColumnDefinition Width="230"/>
                 <ColumnDefinition Width="25"/>
-                <!-- Mere plads til detaljer -->
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Venstre side: gæsteliste -->
+            <!-- Left Column: Guest List -->
             <Border Grid.Column="0"
                     BorderBrush="#DDDDDD"
                     BorderThickness="1"
@@ -87,7 +87,7 @@
                 </Grid>
             </Border>
 
-            <!-- Højre side: handlinger, valgt gæst og borgeroplysninger -->
+            <!-- Right Column: Actions & Details -->
             <Border Grid.Column="2"
                     BorderBrush="#DDDDDD"
                     BorderThickness="1"
@@ -97,7 +97,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
 
-                        <!-- Handlinger -->
+                        <!-- Actions -->
                         <TextBlock Text="Handlinger"
                                    FontSize="20"
                                    FontWeight="SemiBold"
@@ -131,7 +131,7 @@
 
                         </StackPanel>
 
-                        <!-- Valgt gæst -->
+                        <!-- Selected Guest Details -->
                         <Border BorderBrush="#E0E0E0"
                                 BorderThickness="1"
                                 Padding="15"

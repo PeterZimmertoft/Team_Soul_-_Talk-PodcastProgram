@@ -1,17 +1,13 @@
-﻿using System;
-using System.Data;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Data;
 using Microsoft.Data.SqlClient;
 using Soul_Talk.Model;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class PodcastEpisodeRepository : IPodcastEpisodeRepository
+    public class PodcastEpisodeRepository : IRepository<PodcastEpisode>
     {
-        private readonly string _connectionString;
+        private readonly string connectionString;
         private List<Guest> guests = new List<Guest>();
 
         public PodcastEpisodeRepository(string connectionString)
@@ -19,7 +15,7 @@ namespace Soul_Talk.Persistence__Repositories_
             IConfigurationRoot config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .Build();
-            _connectionString = connectionString;
+            this.connectionString = connectionString;
         }
 
 
@@ -27,7 +23,7 @@ namespace Soul_Talk.Persistence__Repositories_
         {
             List<PodcastEpisode> PodcastEpisodes = new List<PodcastEpisode>();
 
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM PodcastEpisode", connection);
@@ -56,7 +52,7 @@ namespace Soul_Talk.Persistence__Repositories_
         public PodcastEpisode GetPodcastEpisodeById(int id)
         {
             PodcastEpisode? PodcastEpisode = null;
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM PodcastEpisode WHERE podcastEpisodeID = @id", connection);
@@ -84,7 +80,7 @@ namespace Soul_Talk.Persistence__Repositories_
         public PodcastEpisode GetLocalAuthorityById(int id)
         {
             PodcastEpisode? PodcastEpisode = null;
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("SELECT * FROM PodcastEpisode WHERE CaseOfficerId = @Id", connection);
@@ -111,7 +107,7 @@ namespace Soul_Talk.Persistence__Repositories_
 
         public int AddPodcastEpisode(PodcastEpisode PodcastEpisode)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 var cmd = new SqlCommand(
@@ -133,7 +129,7 @@ namespace Soul_Talk.Persistence__Repositories_
 
         public void UpdatePodcastEpisode(PodcastEpisode PodcastEpisode)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("UPDATE PodcastEpisode SET title = @title, " +
@@ -156,7 +152,7 @@ namespace Soul_Talk.Persistence__Repositories_
 
         public void DeletePodcastEpisode(int id)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 SqlCommand cmd = new SqlCommand("DELETE FROM PodcastEpisode WHERE podcastEpisodeID = @podcastEpisodeID", connection);
@@ -167,7 +163,7 @@ namespace Soul_Talk.Persistence__Repositories_
 
         public int AddGuestToPodcastEpisode(int podcastEpisodeId, int guestId)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
                 var cmd = new SqlCommand(
@@ -182,5 +178,31 @@ namespace Soul_Talk.Persistence__Repositories_
                 return (int)cmd.ExecuteScalar();
             }
         }
+
+            //IRepository CRUD metoder.
+            public List<PodcastEpisode> GetAll()
+            {
+                return GetAllPodcastEpisodes();
+            }
+
+            public PodcastEpisode GetById(int id)
+            {
+                return GetPodcastEpisodeById(id);
+            }
+
+            public int Add(PodcastEpisode model)
+            {
+                return AddPodcastEpisode(model);
+            }
+
+            public void Update(PodcastEpisode model)
+            {
+                UpdatePodcastEpisode(model);
+            }
+
+            public void Delete(int id)
+            {
+                DeletePodcastEpisode(id);
+            }
+        }
     }
-}
