@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../RepoTest/URepoTest.csproj" Id="20ca663d-5427-4a5d-b3f6-a4a724e18ff1" />
   <Project Path="../UseCase1-Test/UseCase1-Test.csproj" Id="02840cc3-1563-4738-9641-097a6d37dbca" />
   <Project Path="Soul_Talk.csproj" />
 </Solution>
