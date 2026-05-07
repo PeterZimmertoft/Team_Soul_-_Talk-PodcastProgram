@@ -2,63 +2,137 @@
 using Soul_Talk.Model;
 using Soul_Talk.Persistence__Repositories_;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.Linq;
 using System.Windows.Input;
 
 namespace Soul_Talk.ViewModel
 {
     public class CreatePodcastEpisodeViewModel : BaseViewModel
     {
-        private IRepository<PodcastEpisode> podcastRepository;
-        private IRepository<Guest> guestRepository;
-        private IRepository<CaseOfficer> caseOfficerRepository;
+        private readonly IRepository<PodcastEpisode> podcastRepository;
+        private readonly IRepository<Guest> guestRepository;
+        private readonly PodcastEpisode _podcastEpisode;
+        private readonly Action<Action<Guest>> _openGuestDialog;
+        private readonly Action _goBack;
 
-        public PodcastEpisode PodcastEpisode { get; set; }
+        public string Title
+        {
+            get => _podcastEpisode.Title;
+            set { _podcastEpisode.Title = value; OnPropertyChanged(nameof(Title)); }
+        }
 
-        public ObservableCollection<CaseOfficer> CaseOfficers { get; set; }
-        public CaseOfficer SelectedCaseOfficer { get; set; }
+        public DateTime Date
+        {
+            get => _podcastEpisode.Date;
+            set { _podcastEpisode.Date = value; OnPropertyChanged(nameof(Date)); }
+        }
 
+        public int Duration
+        {
+            get => _podcastEpisode.Duration;
+            set { _podcastEpisode.Duration = value; OnPropertyChanged(nameof(Duration)); }
+        }
+
+        public string Status
+        {
+            get => _podcastEpisode.Status;
+            set { _podcastEpisode.Status = value; OnPropertyChanged(nameof(Status)); }
+        }
+
+        public string MeetingPlace
+        {
+            get => _podcastEpisode.MeetingPlace;
+            set { _podcastEpisode.MeetingPlace = value; OnPropertyChanged(nameof(MeetingPlace)); }
+        }
+
+        public string Note
+        {
+            get => _podcastEpisode.Note;
+            set { _podcastEpisode.Note = value; OnPropertyChanged(nameof(Note)); }
+        }
+
+        public string CaseOfficerName
+        {
+            get => _podcastEpisode.CaseOfficerName;
+            set { _podcastEpisode.CaseOfficerName = value; OnPropertyChanged(nameof(CaseOfficerName)); }
+        }
+
+        public ObservableCollection<string> StatusOptions { get; set; }
         public ObservableCollection<Guest> SelectedGuests { get; set; }
+        public Guest SelectedEpisodeGuest { get; set; }
 
         public ICommand AddGuestCommand { get; set; }
+        public ICommand RemoveSelectedEpisodeGuestCommand { get; set; }
         public ICommand SavePodcastEpisodeCommand { get; set; }
         public ICommand CancelCommand { get; set; }
-
-        private Action _goBackAction;
 
         public CreatePodcastEpisodeViewModel(
             IRepository<PodcastEpisode> podcastRepo,
             IRepository<Guest> guestRepo,
-            IRepository<CaseOfficer> caseOfficerRepo,
-            Action goBack)
-
+            Action goBack,
+            Action<Action<Guest>> openGuestDialog)
         {
             podcastRepository = podcastRepo;
             guestRepository = guestRepo;
-            caseOfficerRepository = caseOfficerRepo;
-            _goBackAction = goBack;
+            _goBack = goBack;
+            _openGuestDialog = openGuestDialog;
 
-            PodcastEpisode = new PodcastEpisode();
-            CaseOfficers = new ObservableCollection<CaseOfficer>();
+            _podcastEpisode = new PodcastEpisode();
+            _podcastEpisode.Date = DateTime.Today;
+            _podcastEpisode.CaseOfficerName = string.Empty;
+
+            StatusOptions = new ObservableCollection<string>
+            {
+                "Planlagt",
+                "Afholdt",
+                "Aflyst"
+            };
+
             SelectedGuests = new ObservableCollection<Guest>();
 
-            AddGuestCommand = new RelayCommand(g => AddGuest((Guest)g));
-            SavePodcastEpisodeCommand = new RelayCommand(_ => SavePodcastEpisode());
-            CancelCommand = new RelayCommand(_ => Cancel());
+            AddGuestCommand = new RelayCommand(AddSelectedGuest);
+            RemoveSelectedEpisodeGuestCommand = new RelayCommand(RemoveSelectedGuest);
+            SavePodcastEpisodeCommand = new RelayCommand(SavePodcastEpisode);
+            CancelCommand = new RelayCommand(Cancel);
         }
 
-        public void AddGuest(Guest guest)
+        private void AddSelectedGuest()
         {
-            if (guest != null)
-                SelectedGuests.Add(guest);
+            if (_openGuestDialog != null)
+            {
+                _openGuestDialog(AddGuestToEpisode);
+            }
+        }
+
+        private void AddGuestToEpisode(Guest guest)
+        {
+            if (guest == null)
+            {
+                return;
+            }
+
+            if (SelectedGuests.Any(item => item.GuestId == guest.GuestId))
+            {
+                return;
+            }
+
+            SelectedGuests.Add(guest);
+        }
+
+        private void RemoveSelectedGuest()
+        {
+            if (SelectedEpisodeGuest != null)
+            {
+                SelectedGuests.Remove(SelectedEpisodeGuest);
+            }
         }
 
         public void SavePodcastEpisode() { }
-        public void Cancel() 
-        { 
-            _goBackAction?.Invoke();
+
+        public void Cancel()
+        {
+            _goBack?.Invoke();
         }
     }
 }

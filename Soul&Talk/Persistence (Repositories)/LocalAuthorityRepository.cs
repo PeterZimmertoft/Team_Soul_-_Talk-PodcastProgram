@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Data;
 using System.Collections.Generic;
-using System.Text;
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Soul_Talk.Model;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
     public class LocalAuthorityRepository : IRepository<LocalAuthority>
     {
         private readonly string connectionString;
-        private List<Citizen> Citizens = new List<Citizen>();
 
         public LocalAuthorityRepository(string connectionString)
         {
-            IConfigurationRoot config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
             this.connectionString = connectionString;
         }
 
@@ -29,51 +22,45 @@ namespace Soul_Talk.Persistence__Repositories_
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM LocalAuthority", connection);
+
+                SqlCommand cmd = new SqlCommand("SELECT LocalAuthorityId, LocalAuthorityName, EanNumber FROM LocalAuthority", connection);
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        LocalAuthority localAuthority = new LocalAuthority
-                        (
-                            reader.GetInt32("localAuthorityId"),
-                            reader["localAuthorityName"] as string,
-                            reader["eanNumber"] as string
-                        );
-                        localAuthorities.Add(localAuthority);
-
+                        localAuthorities.Add(ReadLocalAuthority(reader));
                     }
-                    return localAuthorities;
                 }
             }
-        }
 
+            return localAuthorities;
+        }
 
         public LocalAuthority GetById(int id)
         {
-            LocalAuthority? LocalAuthority = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM LocalAuthority WHERE CaseOfficerId = @Id", connection);
-                cmd.Parameters.AddWithValue("@CaseOfficerId", id);
+
+                SqlCommand cmd = new SqlCommand("SELECT LocalAuthorityId, LocalAuthorityName, EanNumber FROM LocalAuthority WHERE LocalAuthorityId = @LocalAuthorityId", connection);
+                cmd.Parameters.Add("@LocalAuthorityId", SqlDbType.Int).Value = id;
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
-                    {
-                        LocalAuthority = new LocalAuthority
-                        (
-                            reader.GetInt32("localAuthorityId"),
-                            reader["localAuthorityName"] as string,
-                            reader["eanNumber"] as string
-                        );
-                    }
+                    return reader.Read() ? ReadLocalAuthority(reader) : new LocalAuthority();
                 }
             }
-            return LocalAuthority;
         }
 
-        //IRepository CRUD metoder.
+        private static LocalAuthority ReadLocalAuthority(SqlDataReader reader)
+        {
+            return new LocalAuthority(
+                reader.GetInt32(reader.GetOrdinal("LocalAuthorityId")),
+                reader["LocalAuthorityName"] as string,
+                reader["EanNumber"] as string);
+        }
+
         public int Add(LocalAuthority model)
         {
             throw new NotImplementedException();

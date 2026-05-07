@@ -2,8 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:view="clr-namespace:Soul_Talk.View"
-             xmlns:viewModel="clr-namespace:Soul_Talk.ViewModel"
-             StartupUri="View/MainView.xaml">
+              xmlns:viewModel="clr-namespace:Soul_Talk.ViewModel">
 
     <Application.Resources>
 

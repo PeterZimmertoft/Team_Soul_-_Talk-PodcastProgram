@@ -11,6 +11,7 @@ namespace Soul_Talk.Model
         public string Phone {  get; set; }
         public string Email {  get; set; }
 
+
         public Guest(int GuestId, string Name, string Phone, string Email)
         {
             this.GuestId = GuestId;

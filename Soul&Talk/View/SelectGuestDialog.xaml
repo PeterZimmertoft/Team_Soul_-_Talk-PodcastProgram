@@ -116,7 +116,7 @@
                     HorizontalAlignment="Right"
                     Margin="0,20,0,0">
 
-            <Button Content="Gem"
+            <Button Content="Vælg gæst"
                     Width="100"
                     Height="32"
                     Margin="0,0,10,0"

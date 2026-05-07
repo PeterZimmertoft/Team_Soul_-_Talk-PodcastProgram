@@ -210,7 +210,7 @@
 
                                     <TextBlock Grid.Row="3"
                                                Grid.Column="1"
-                                               Text="{Binding SelectedPodcastEpisode.Status}"
+                                                Text="{Binding SelectedPodcastEpisode.Status}"
                                                Margin="0,0,0,10"/>
 
                                     <TextBlock Grid.Row="4"
@@ -221,7 +221,7 @@
 
                                     <TextBlock Grid.Row="4"
                                                Grid.Column="1"
-                                               Text="{Binding SelectedPodcastEpisode.MeetingPlace}"
+                                                Text="{Binding SelectedPodcastEpisode.MeetingPlace}"
                                                TextWrapping="Wrap"
                                                Margin="0,0,0,10"/>
 
@@ -233,7 +233,7 @@
 
                                     <TextBlock Grid.Row="5"
                                                Grid.Column="1"
-                                               Text="{Binding SelectedPodcastEpisode.CaseOfficer}"
+                                               Text="{Binding SelectedPodcastEpisode.CaseOfficerName}"
                                                Margin="0,0,0,10"/>
 
                                     <TextBlock Grid.Row="6"
@@ -258,48 +258,9 @@
 
                             </StackPanel>
                         </Border>
-
-                        <!-- Tilknyttede gæster -->
-                        <Border BorderBrush="#E0E0E0"
-                                BorderThickness="1"
-                                Padding="15"
-                                Background="White">
-
-                            <StackPanel>
-
-                                <TextBlock Text="Tilknyttede gæster:"
-                                           FontSize="18"
-                                           FontWeight="SemiBold"
-                                           Margin="0,0,0,15" FontFamily="Book Antiqua"/>
-
-                                <ListBox ItemsSource="{Binding SelectedEpisodeGuests}"
-                                         MinHeight="100"
-                                         MaxHeight="180">
-
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Margin="5">
-                                                <TextBlock Text="{Binding Name}"
-                                                           FontWeight="SemiBold"/>
-
-                                                <TextBlock Text="{Binding Email}"
-                                                           Foreground="#666666"
-                                                           FontSize="12"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-
-                                </ListBox>
-
-                            </StackPanel>
-                        </Border>
-
                     </StackPanel>
                 </ScrollViewer>
-
             </Border>
-
         </Grid>
-
     </Grid>
 </UserControl>

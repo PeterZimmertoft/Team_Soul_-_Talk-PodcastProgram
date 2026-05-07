@@ -27,13 +27,6 @@
                            Margin="0,8,0,0"/>
             </StackPanel>
 
-            <Button Grid.Column="1"
-                    Content="Tilbage"
-                    Width="90"
-                    Height="28"
-                    Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top" />
         </Grid>
 
         <!-- Podcast Form -->
@@ -66,10 +59,11 @@
                         <TextBlock Text="Dato"
                                    FontWeight="SemiBold"/>
                         <DatePicker SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}"
+                                    DisplayDate="{Binding Date}"
                                     Height="32"
                                     Margin="0,5,0,15"/>
 
-                        <TextBlock Text="Duration"
+                         <TextBlock Text="Varighed i timer"
                                    FontWeight="SemiBold"/>
                         <TextBox Text="{Binding Duration, UpdateSourceTrigger=PropertyChanged}"
                                  Height="32"
@@ -78,9 +72,9 @@
                         <TextBlock Text="Status"
                                    FontWeight="SemiBold"/>
                         <ComboBox ItemsSource="{Binding StatusOptions}"
-                                  SelectedItem="{Binding Status, UpdateSourceTrigger=PropertyChanged}"
-                                  Height=""
-                                  Margin="0,5,0,15"/>
+                                   SelectedItem="{Binding Status, UpdateSourceTrigger=PropertyChanged}"
+                                   Height="32"
+                                   Margin="0,5,0,15"/>
 
                         <TextBlock Text="Mødested"
                                    FontWeight="SemiBold"/>
@@ -88,11 +82,11 @@
                                  Height="32"
                                  Margin="0,5,0,15"/>
 
-                        <TextBlock Text="Sagsbehandler"
-                                   FontWeight="SemiBold"/>
-                        <TextBox Text="{Binding CaseOfficer, UpdateSourceTrigger=PropertyChanged}"
-                                 Height="32"
-                                 Margin="0,5,0,15"/>
+                          <TextBlock Text="Sagsbehandler"
+                                      FontWeight="SemiBold"/>
+                          <TextBox Text="{Binding CaseOfficerName, UpdateSourceTrigger=PropertyChanged}"
+                                  Height="32"
+                                  Margin="0,5,0,15"/>
 
                         <TextBlock Text="Note"
                                    FontWeight="SemiBold"/>
@@ -131,12 +125,12 @@
                                     Content="Tilføj gæst"
                                     Width="110"
                                     Height="30"
-                                    Command="{Binding OpenSelectGuestDialogCommand}"
+                                    Command="{Binding AddGuestCommand}"
                                     Background="White"
                                     BorderBrush="Black" TextBlock.FontFamily="Book Antiqua"/>
                         </Grid>
 
-                        <ListBox ItemsSource="{Binding SelectedEpisodeGuests}"
+                        <ListBox ItemsSource="{Binding SelectedGuests}"
                                  SelectedItem="{Binding SelectedEpisodeGuest}"
                                  MinHeight="100"
                                  MaxHeight="180"

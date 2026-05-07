@@ -32,20 +32,10 @@
             Margin="0,0,0,12"
             Command="{Binding ShowGuestViewCommand}" Background="#FFB5D5E5" FontFamily="Book Antiqua" FontSize="18"/>
 
-                <Button Content="Opret gæst"
-            Height="45"
-            Margin="0,0,0,12"
-            Command="{Binding ShowCreateGuestViewCommand}" Click="Button_Click" Background="#FFB5D5E5" FontFamily="Book Antiqua" FontSize="18"/>
-
                 <Button Content="Podcast episoder"
             Height="45"
             Margin="0,0,0,12"
             Command="{Binding ShowPodcastEpisodeViewCommand}" Background="#FFB5D5E5" FontSize="18" FontFamily="Book Antiqua"/>
-
-                <Button Content="Opret podcast episode"
-            Height="45"
-            Margin="0,0,0,12"
-            Command="{Binding ShowCreatePodcastEpisodeViewCommand}" Background="#FFB5D5E5" FontFamily="Book Antiqua" FontSize="18" />
 
             </StackPanel>
         </Border>

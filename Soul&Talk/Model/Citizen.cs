@@ -8,28 +8,29 @@ namespace Soul_Talk.Model
     {
         public int CitizenId {  get; set; }
         public string Name { get; set; }
-        public string _cprNumber { get; private set; }
-        public string _workStatus { get; set; }
-        public string _workType { get; private set; }
-        public string _consentStatus { get; private set; }
-        public string _currentStatus { get; private set; }
-        public string _specialConsiderations { get; private set; }
+        public string CprNumber { get; private set; }
+        public string WorkStatus { get; set; }
+        public string WorkType { get; private set; }
+        public string ConsentStatus { get; private set; }
+        public string CurrentStatus { get; private set; }
+        public string SpecialConsiderations { get; private set; }
 
 
 
         public Citizen() : base() { }
 
+
         public Citizen(int CitizenId, string Name, string Phone, string Email, string _cprNumber, string _workStatus, string _workType, string _consentStatus, string _currentStatus, string _specialConsiderations) :
-            base(CitizenId, Name, Phone, Email)
+            base(0, Name, Phone, Email)
         {
             this.CitizenId = CitizenId;
             this.Name = Name;
-            this._cprNumber = _cprNumber;
-            this._workStatus = _workStatus;
-            this._workType = _workType;
-            this._consentStatus = _consentStatus;
-            this._currentStatus = _currentStatus;
-            this._specialConsiderations = _specialConsiderations;
+            this.CprNumber = _cprNumber;
+            this.WorkStatus = _workStatus;
+            this.WorkType = _workType;
+            this.ConsentStatus = _consentStatus;
+            this.CurrentStatus = _currentStatus;
+            this.SpecialConsiderations = _specialConsiderations;
         }
     }
 }

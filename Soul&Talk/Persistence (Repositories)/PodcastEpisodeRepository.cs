@@ -1,151 +1,124 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Soul_Talk.Model;
-using Microsoft.Extensions.Configuration;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
+    //UC2: Planlæg podcast-episode.
     public class PodcastEpisodeRepository : IRepository<PodcastEpisode>
     {
         private readonly string connectionString;
-        private List<Guest> guests = new List<Guest>();
 
         public PodcastEpisodeRepository(string connectionString)
         {
-            IConfigurationRoot config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .Build();
             this.connectionString = connectionString;
         }
 
-
-        public List<PodcastEpisode> GetAllPodcastEpisodes()
+        public List<PodcastEpisode> GetAll()
         {
-            List<PodcastEpisode> PodcastEpisodes = new List<PodcastEpisode>();
+            List<PodcastEpisode> episodes = new List<PodcastEpisode>();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM PodcastEpisode", connection);
+
+                SqlCommand cmd = new SqlCommand("SELECT PodcastEpisode.PodcastEpisodeID, PodcastEpisode.Title, PodcastEpisode.Date, PodcastEpisode.Duration, " +
+                    "PodcastEpisode.Status, PodcastEpisode.MeetingPlace, PodcastEpisode.Note, PodcastEpisode.CaseOfficerId, CaseOfficer.Name AS CaseOfficerName " +
+                    "FROM PodcastEpisode INNER JOIN CaseOfficer ON PodcastEpisode.CaseOfficerId = CaseOfficer.CaseOfficerId", connection);
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        PodcastEpisode PodcastEpisode = new PodcastEpisode
-                        (
-                            reader.GetInt32("podcastEpisodeID"),
-                            reader["title"] as string,
-                            (DateTime)reader["date"],
-                            reader.GetInt32("duration"),
-                            reader["status"] as string,
-                            reader["meetingPlace"] as string,
-                            reader["note"] as string
-                        );
-                        PodcastEpisodes.Add(PodcastEpisode);
-
+                        episodes.Add(ReadPodcastEpisode(reader));
                     }
-                    return PodcastEpisodes;
                 }
             }
+
+            return episodes;
         }
 
-        public PodcastEpisode GetPodcastEpisodeById(int id)
+        public PodcastEpisode GetById(int id)
         {
-            PodcastEpisode? PodcastEpisode = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM PodcastEpisode WHERE podcastEpisodeID = @id", connection);
-                cmd.Parameters.AddWithValue("@id", id);
+
+                SqlCommand cmd = new SqlCommand("SELECT PodcastEpisode.PodcastEpisodeID, PodcastEpisode.Title, PodcastEpisode.Date, PodcastEpisode.Duration," +
+                    " PodcastEpisode.Status, PodcastEpisode.MeetingPlace, PodcastEpisode.Note, PodcastEpisode.CaseOfficerId, " +
+                    "CaseOfficer.Name AS CaseOfficerName FROM PodcastEpisode INNER JOIN CaseOfficer ON PodcastEpisode.CaseOfficerId = CaseOfficer.CaseOfficerId " +
+                    "WHERE PodcastEpisode.PodcastEpisodeID = @podcastEpisodeID", connection);
+                cmd.Parameters.Add("@podcastEpisodeID", SqlDbType.Int).Value = id;
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
-                    {
-                        PodcastEpisode = new PodcastEpisode
-                        (
-                            reader.GetInt32("podcastEpisodeID"),
-                            reader["title"] as string,
-                            (DateTime)reader["date"],
-                            reader.GetInt32("duration"),
-                            reader["status"] as string,
-                            reader["meetingPlace"] as string,
-                            reader["note"] as string
-                        );
-                    }
+                    return reader.Read() ? ReadPodcastEpisode(reader) : new PodcastEpisode();
                 }
             }
-            return PodcastEpisode;
         }
 
-        public PodcastEpisode GetLocalAuthorityById(int id)
+        public int Add(PodcastEpisode model)
         {
-            PodcastEpisode? PodcastEpisode = null;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM PodcastEpisode WHERE CaseOfficerId = @Id", connection);
-                cmd.Parameters.AddWithValue("@CaseOfficerId", id);
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        PodcastEpisode = new PodcastEpisode
-                        (
-                            reader.GetInt32("podcastEpisodeID"),
-                            reader["title"] as string,
-                            (DateTime)reader["date"],
-                            reader.GetInt32("duration"),
-                            reader["status"] as string,
-                            reader["meetingPlace"] as string,
-                            reader["note"] as string
-                        );
-                    }
-                }
-            }
-            return PodcastEpisode;
+            return AddPodcastEpisode(model);
         }
 
-        public int AddPodcastEpisode(PodcastEpisode PodcastEpisode)
+        public void Update(PodcastEpisode model)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                var cmd = new SqlCommand(
-                    "INSERT INTO PodcastEpisode (title, date, duration, status, meetingPlace, note) " +
-                    "VALUES (@title, @date, @duration, @status, @meetingPlace, @note); " +
-                    "SELECT SCOPE_IDENTITY();",
-                conn
-            );
-                cmd.Parameters.AddWithValue("@title", PodcastEpisode.Title);
-                cmd.Parameters.AddWithValue("@date", PodcastEpisode.Date);
-                cmd.Parameters.AddWithValue("@duration", PodcastEpisode.Duration);
-                cmd.Parameters.AddWithValue("@status", PodcastEpisode._status);
-                cmd.Parameters.AddWithValue("@meetingPlace", PodcastEpisode._meetingPlace);
-                cmd.Parameters.AddWithValue("@note", PodcastEpisode._note);
-
-               return (int)cmd.ExecuteScalar();
-            }
+            UpdatePodcastEpisode(model);
         }
 
-        public void UpdatePodcastEpisode(PodcastEpisode PodcastEpisode)
+        public void Delete(int id)
+        {
+            DeletePodcastEpisode(id);
+        }
+
+        public int AddPodcastEpisode(PodcastEpisode podcastEpisode)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE PodcastEpisode SET title = @title, " +
-                    "date = @date, " +
-                    "duration = @duration, " +
-                    "status = @status, " +
-                    "meetingPlace = @meetingPlace, " +
-                    "note = @note" +
-                    "WHERE podcastEpisodeID = @podcastEpisodeID", connection);
-                cmd.Parameters.Add("@title", SqlDbType.NVarChar).Value = PodcastEpisode.Title;
-                cmd.Parameters.Add("@date", SqlDbType.DateTime).Value = PodcastEpisode.Date;
-                cmd.Parameters.Add("@duration", SqlDbType.Int).Value = PodcastEpisode.Duration;
-                cmd.Parameters.Add("@status", SqlDbType.NVarChar).Value = PodcastEpisode._status;
-                cmd.Parameters.Add("@meetingPlace", SqlDbType.NVarChar).Value = PodcastEpisode._meetingPlace;
-                cmd.Parameters.Add("@note", SqlDbType.NVarChar).Value = PodcastEpisode._note;
-                cmd.Parameters.Add("@podcastEpisodeID", SqlDbType.Int).Value = PodcastEpisode.PodcastEpisodeID;
+
+                SqlCommand cmd = new SqlCommand(
+                    "INSERT INTO " +
+                    "PodcastEpisode (Title, Date, Duration, Status, MeetingPlace, Note, CaseOfficerId)" +
+
+                    " VALUES " +
+                    "(@Title, @Date, @Duration, @Status, @MeetingPlace, @Note, @CaseOfficerId);",
+                    connection);
+
+                cmd.Parameters.Add("@Title", SqlDbType.NVarChar).Value = podcastEpisode.Title;
+                cmd.Parameters.Add("@Date", SqlDbType.DateTime).Value = podcastEpisode.Date;
+                cmd.Parameters.Add("@Duration", SqlDbType.Int).Value = podcastEpisode.Duration;
+                cmd.Parameters.Add("@Status", SqlDbType.NVarChar).Value = podcastEpisode.Status;
+                cmd.Parameters.Add("@MeetingPlace", SqlDbType.NVarChar).Value = podcastEpisode.MeetingPlace;
+                cmd.Parameters.Add("@Note", SqlDbType.NVarChar).Value = podcastEpisode.Note;
+                cmd.Parameters.Add("@CaseOfficerId", SqlDbType.Int).Value = podcastEpisode.CaseOfficerId;
+
+                cmd.ExecuteNonQuery();
+                return 1;
+            }
+        }
+
+        public void UpdatePodcastEpisode(PodcastEpisode podcastEpisode)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand("UPDATE PodcastEpisode SET Title = @Title, Date = @Date, " +
+                    "Duration = @Duration, Status = @Status, MeetingPlace = @MeetingPlace, Note = @Note, CaseOfficerId = @CaseOfficerId WHERE PodcastEpisodeID = @PodcastEpisodeID", connection);
+
+                cmd.Parameters.Add("@Title", SqlDbType.NVarChar).Value = podcastEpisode.Title;
+                cmd.Parameters.Add("@Date", SqlDbType.DateTime).Value = podcastEpisode.Date;
+                cmd.Parameters.Add("@Duration", SqlDbType.Int).Value = podcastEpisode.Duration;
+                cmd.Parameters.Add("@Status", SqlDbType.NVarChar).Value = podcastEpisode.Status;
+                cmd.Parameters.Add("@MeetingPlace", SqlDbType.NVarChar).Value = podcastEpisode.MeetingPlace;
+                cmd.Parameters.Add("@Note", SqlDbType.NVarChar).Value = podcastEpisode.Note;
+                cmd.Parameters.Add("@CaseOfficerId", SqlDbType.Int).Value = podcastEpisode.CaseOfficerId;
+                cmd.Parameters.Add("@PodcastEpisodeID", SqlDbType.Int).Value = podcastEpisode.PodcastEpisodeID;
+
                 cmd.ExecuteNonQuery();
             }
         }
@@ -155,54 +128,44 @@ namespace Soul_Talk.Persistence__Repositories_
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM PodcastEpisode WHERE podcastEpisodeID = @podcastEpisodeID", connection);
-                cmd.Parameters.AddWithValue("@podcastEpisodeID", id);
+
+                SqlCommand cmd = new SqlCommand("DELETE FROM PodcastEpisode WHERE PodcastEpisodeID = @PodcastEpisodeID", connection);
+                cmd.Parameters.Add("@PodcastEpisodeID", SqlDbType.Int).Value = id;
+
                 cmd.ExecuteNonQuery();
             }
         }
 
         public int AddGuestToPodcastEpisode(int podcastEpisodeId, int guestId)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                conn.Open();
-                var cmd = new SqlCommand(
-                    "INSERT INTO PodcastEpisodeGuests (podcastEpisodeID, guestID) " +
-                    "VALUES (@podcastEpisodeID, @guestID); " +
-                    "SELECT SCOPE_IDENTITY();",
-                conn
-            );
-                cmd.Parameters.AddWithValue("@podcastEpisodeID", podcastEpisodeId);
-                cmd.Parameters.AddWithValue("@guestID", guestId);
-                
-                return (int)cmd.ExecuteScalar();
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand("INSERT INTO PodcastEpisodeGuests (PodcastEpisodeID, GuestId) VALUES (@PodcastEpisodeID, @GuestId);", connection);
+
+                cmd.Parameters.Add("@PodcastEpisodeID", SqlDbType.Int).Value = podcastEpisodeId;
+                cmd.Parameters.Add("@GuestId", SqlDbType.Int).Value = guestId;
+
+                cmd.ExecuteNonQuery();
+                return 1;
             }
         }
 
-            //IRepository CRUD metoder.
-            public List<PodcastEpisode> GetAll()
+        private static PodcastEpisode ReadPodcastEpisode(SqlDataReader reader)
+        {
+            return new PodcastEpisode(
+                reader.GetInt32(reader.GetOrdinal("PodcastEpisodeID")),
+                reader["Title"] as string,
+                (DateTime)reader["Date"],
+                reader.GetInt32(reader.GetOrdinal("Duration")),
+                reader["Status"] as string,
+                reader["MeetingPlace"] as string,
+                reader["Note"] as string)
             {
-                return GetAllPodcastEpisodes();
-            }
-
-            public PodcastEpisode GetById(int id)
-            {
-                return GetPodcastEpisodeById(id);
-            }
-
-            public int Add(PodcastEpisode model)
-            {
-                return AddPodcastEpisode(model);
-            }
-
-            public void Update(PodcastEpisode model)
-            {
-                UpdatePodcastEpisode(model);
-            }
-
-            public void Delete(int id)
-            {
-                DeletePodcastEpisode(id);
-            }
+                CaseOfficerId = reader.GetInt32(reader.GetOrdinal("CaseOfficerId")),
+                CaseOfficerName = reader["CaseOfficerName"] as string
+            };
         }
     }
+}

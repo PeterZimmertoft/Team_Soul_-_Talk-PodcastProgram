@@ -2,51 +2,33 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
 
-    <Grid Margin="40" Background="White">
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header -->
-        <Grid Grid.Row="0" Margin="0,0,0,25">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Grid.Column="0">
-                <TextBlock Text="Opret gæsteprofil"
-                           FontSize="28"
-                           FontWeight="Bold" />
-
-                <TextBlock Text="Indtast gæstens oplysninger. Hvis gæsten også er borger, kan ekstra informationer udfyldes."
-                           FontSize="14"
-                           Foreground="#666666"
-                           Margin="0,8,0,0"
-                           TextWrapping="Wrap"/>
-            </StackPanel>
-
-            <Button Content="Tilbage"
-                    Width="90" Height="28"
-                    Command="{Binding CancelCommand}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top"
-                    Grid.Column="1" />
-        </Grid>
-
-        <!-- Guest Form -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <Grid Margin="40" Background="White">
 
             <StackPanel Width="520"
                         HorizontalAlignment="Left">
 
-                <!-- Guest Info Section -->
+                <!-- Header -->
+                <StackPanel Margin="0,0,0,25">
+                    <TextBlock Text="Opret gæsteprofil"
+                               FontSize="28"
+                               FontWeight="Bold" />
+
+                    <TextBlock Text="Indtast gæstens oplysninger. Hvis gæsten også er borger, kan ekstra informationer udfyldes."
+                               FontSize="14"
+                               Foreground="#666666"
+                               Margin="0,8,0,0"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <CheckBox x:Name="CitizenToggle"
+                          Content="Tilføj borgeroplysninger"
+                          FontWeight="SemiBold"
+                          Margin="0,0,0,10"
+                          />
+
                 <Border BorderBrush="#DDDDDD"
                         BorderThickness="1"
                         Padding="20"
@@ -78,20 +60,16 @@
                                  Height="32"
                                  Margin="0,5,0,20"/>
 
-                        <CheckBox Content="Gæsten er også borger"
-                                  IsChecked="{Binding IsCitizen, UpdateSourceTrigger=PropertyChanged}"
-                                  FontWeight="SemiBold"/>
-
                     </StackPanel>
                 </Border>
 
-                <!-- Citizen Info Section (Hidden by default) -->
-                <Border BorderBrush="#DDDDDD"
+                <Border x:Name="CitizenInfoBorder"
+                        BorderBrush="#DDDDDD"
                         BorderThickness="1"
                         Padding="20"
                         Background="White"
                         Margin="0,0,0,20"
-                        Visibility="{Binding IsCitizen, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        IsEnabled="{Binding IsChecked, ElementName=CitizenToggle}">
 
                     <StackPanel>
 
@@ -162,8 +140,13 @@
 
                 </StackPanel>
 
-            </StackPanel>
-        </ScrollViewer>
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="Red"
+                           Margin="0,12,0,0"
+                           TextWrapping="Wrap"
+                           FontFamily="Book Antiqua"/>
 
-    </Grid>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -1,10 +1,13 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Soul_Talk.Model;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    public class GuestRepository : IRepository<Guest>
+    //UC1: Opret profil til podcast episode.
+    public class GuestRepository : IGuestRepository
     {
         private readonly string connectionString;
 
@@ -21,21 +24,13 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Guest", connection);
+                SqlCommand cmd = new SqlCommand("SELECT GuestId, Name, Phone, Email FROM Guest", connection);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        Guest guest = new Guest
-                        {
-                            GuestId = Convert.ToInt32(reader["GuestId"]),
-                            Name = reader["Name"] as string,
-                            Phone = reader["Phone"] as string,
-                            Email = reader["Email"] as string
-                        };
-
-                        guests.Add(guest);
+                        guests.Add(ReadGuest(reader));
                     }
                 }
             }
@@ -45,35 +40,18 @@ namespace Soul_Talk.Persistence__Repositories_
 
         public Guest GetById(int id)
         {
-            Guest? guest = null;
-
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT * FROM Guest WHERE GuestId = @GuestId",
-                    connection
-                );
-
+                SqlCommand cmd = new SqlCommand("SELECT GuestId, Name, Phone, Email FROM Guest WHERE GuestId = @GuestId", connection);
                 cmd.Parameters.Add("@GuestId", SqlDbType.Int).Value = id;
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    if (reader.Read())
-                    {
-                        guest = new Guest
-                        {
-                            GuestId = Convert.ToInt32(reader["GuestId"]),
-                            Name = reader["Name"] as string,
-                            Phone = reader["Phone"] as string,
-                            Email = reader["Email"] as string
-                        };
-                    }
+                    return reader.Read() ? ReadGuest(reader) : new Guest();
                 }
             }
-
-            return guest;
         }
 
         public int Add(Guest guest)
@@ -82,18 +60,14 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "INSERT INTO Guest (Name, Phone, Email) " +
-                    "VALUES (@Name, @Phone, @Email); " +
-                    "SELECT SCOPE_IDENTITY();",
-                    connection
-                );
+                SqlCommand cmd = new SqlCommand("INSERT INTO Guest (Name, Phone, Email) VALUES (@Name, @Phone, @Email);", connection);
 
                 cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = guest.Name;
                 cmd.Parameters.Add("@Phone", SqlDbType.NVarChar).Value = guest.Phone;
                 cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = guest.Email;
 
-                return Convert.ToInt32(cmd.ExecuteScalar());
+                cmd.ExecuteNonQuery();
+                return 1;
             }
         }
 
@@ -103,14 +77,7 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "UPDATE Guest SET " +
-                    "Name = @Name, " +
-                    "Phone = @Phone, " +
-                    "Email = @Email " +
-                    "WHERE GuestId = @GuestId",
-                    connection
-                );
+                SqlCommand cmd = new SqlCommand("UPDATE Guest SET Name = @Name, Phone = @Phone, Email = @Email WHERE GuestId = @GuestId", connection);
 
                 cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = guest.Name;
                 cmd.Parameters.Add("@Phone", SqlDbType.NVarChar).Value = guest.Phone;
@@ -127,17 +94,38 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "DELETE FROM Guest WHERE GuestId = @GuestId",
-                    connection
-                );
-
+                SqlCommand cmd = new SqlCommand("DELETE FROM Guest WHERE GuestId = @GuestId", connection);
                 cmd.Parameters.Add("@GuestId", SqlDbType.Int).Value = id;
 
                 cmd.ExecuteNonQuery();
             }
         }
 
+        public bool ProfileExists(string name, string phone, string email)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(1) FROM Guest WHERE Name = @Name AND Phone = @Phone AND Email = @Email", connection);
+
+                cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = name;
+                cmd.Parameters.Add("@Phone", SqlDbType.NVarChar).Value = phone;
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = email;
+
+                return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+            }
         }
 
+        private static Guest ReadGuest(SqlDataReader reader)
+        {
+            return new Guest
+            {
+                GuestId = reader.GetInt32(reader.GetOrdinal("GuestId")),
+                Name = reader["Name"] as string,
+                Phone = reader["Phone"] as string,
+                Email = reader["Email"] as string
+            };
+        }
     }
+}

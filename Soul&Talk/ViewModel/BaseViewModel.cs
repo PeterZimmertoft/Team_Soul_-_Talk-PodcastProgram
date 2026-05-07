@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Soul_Talk.ViewModel
@@ -12,7 +9,9 @@ namespace Soul_Talk.ViewModel
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
         }
     }
 }
