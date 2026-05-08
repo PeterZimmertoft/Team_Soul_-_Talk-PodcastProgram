@@ -81,7 +81,6 @@
                                 </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
-
                     </ListBox>
 
                 </Grid>
@@ -192,7 +191,6 @@
                                                Margin="0,0,0,10" FontFamily="Book Antiqua" Grid.ColumnSpan="2"/>
 
                                 </Grid>
-
                             </StackPanel>
                         </Border>
 

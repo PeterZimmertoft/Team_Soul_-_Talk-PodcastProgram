@@ -10,8 +10,8 @@ namespace Soul_Talk.ViewModel
     public class SelectGuestViewModel : BaseViewModel
     {
         private readonly IGuestRepository guestRepository;
-        private readonly System.Action<Guest> _confirmSelection;
-        private readonly System.Action _closeDialog;
+        private readonly Action<Guest> _confirmSelection;
+        private readonly Action _closeDialog;
 
         public ObservableCollection<Guest> Guests { get; set; }
         private Guest _selectedGuest;
@@ -40,30 +40,24 @@ namespace Soul_Talk.ViewModel
             LoadGuests();
         }
 
-        private void OnGuestSelected(Guest guest)
-        {
-            SelectedGuest = guest;
-        }
-
-        public void LoadGuests() 
+        public void LoadGuests()
         {
             var guests = guestRepository.GetAll();
             foreach (var g in guests)
                 Guests.Add(g);
         }
 
-
-        public void ConfirmGuestSelection() 
+        public void ConfirmGuestSelection()
         {
-                if (SelectedGuest != null)
-                {
-                    _confirmSelection?.Invoke(SelectedGuest);
-                    _closeDialog?.Invoke();
+            if (SelectedGuest != null)
+            {
+                _confirmSelection?.Invoke(SelectedGuest);
+                _closeDialog?.Invoke();
             }
         }
 
-        public void Cancel() 
-        { 
+        public void Cancel()
+        {
             _closeDialog?.Invoke();
         }
     }

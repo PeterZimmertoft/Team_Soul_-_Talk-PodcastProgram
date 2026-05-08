@@ -1,86 +1,91 @@
 ﻿using Soul_Talk.Commands;
 using Soul_Talk.Model;
 using Soul_Talk.Persistence__Repositories_;
+using Soul_Talk.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Soul_Talk.ViewModel
 {
     public class CreatePodcastEpisodeViewModel : BaseViewModel
     {
-        private readonly IRepository<PodcastEpisode> podcastRepository;
-        private readonly IRepository<Guest> guestRepository;
-        private readonly PodcastEpisode _podcastEpisode;
-        private readonly Action<Action<Guest>> _openGuestDialog;
-        private readonly Action _goBack;
+        private readonly IPodcastEpisodeRepository podcastRepository;
+        private readonly INavigationService navigationService;
+        private readonly PodcastEpisode podcastEpisode;
 
         public string Title
         {
-            get => _podcastEpisode.Title;
-            set { _podcastEpisode.Title = value; OnPropertyChanged(nameof(Title)); }
+            get { return podcastEpisode.Title; }
+            set { podcastEpisode.Title = value; OnPropertyChanged(nameof(Title)); }
         }
 
         public DateTime Date
         {
-            get => _podcastEpisode.Date;
-            set { _podcastEpisode.Date = value; OnPropertyChanged(nameof(Date)); }
+            get { return podcastEpisode.Date; }
+            set { podcastEpisode.Date = value; OnPropertyChanged(nameof(Date)); }
         }
 
         public int Duration
         {
-            get => _podcastEpisode.Duration;
-            set { _podcastEpisode.Duration = value; OnPropertyChanged(nameof(Duration)); }
+            get { return podcastEpisode.Duration; }
+            set { podcastEpisode.Duration = value; OnPropertyChanged(nameof(Duration)); }
         }
 
         public string Status
         {
-            get => _podcastEpisode.Status;
-            set { _podcastEpisode.Status = value; OnPropertyChanged(nameof(Status)); }
+            get { return podcastEpisode.Status; }
+            set { podcastEpisode.Status = value; OnPropertyChanged(nameof(Status)); }
         }
 
         public string MeetingPlace
         {
-            get => _podcastEpisode.MeetingPlace;
-            set { _podcastEpisode.MeetingPlace = value; OnPropertyChanged(nameof(MeetingPlace)); }
-        }
-
-        public string Note
-        {
-            get => _podcastEpisode.Note;
-            set { _podcastEpisode.Note = value; OnPropertyChanged(nameof(Note)); }
+            get { return podcastEpisode.MeetingPlace; }
+            set { podcastEpisode.MeetingPlace = value; OnPropertyChanged(nameof(MeetingPlace)); }
         }
 
         public string CaseOfficerName
         {
-            get => _podcastEpisode.CaseOfficerName;
-            set { _podcastEpisode.CaseOfficerName = value; OnPropertyChanged(nameof(CaseOfficerName)); }
+            get { return podcastEpisode.CaseOfficerName; }
+            set { podcastEpisode.CaseOfficerName = value; OnPropertyChanged(nameof(CaseOfficerName)); }
+        }
+
+        public string Note
+        {
+            get { return podcastEpisode.Note; }
+            set { podcastEpisode.Note = value; OnPropertyChanged(nameof(Note)); }
         }
 
         public ObservableCollection<string> StatusOptions { get; set; }
         public ObservableCollection<Guest> SelectedGuests { get; set; }
-        public Guest SelectedEpisodeGuest { get; set; }
+
+        private Guest selectedEpisodeGuest;
+        public Guest SelectedEpisodeGuest
+        {
+            get { return selectedEpisodeGuest; }
+            set
+            {
+                selectedEpisodeGuest = value;
+                OnPropertyChanged(nameof(SelectedEpisodeGuest));
+            }
+        }
 
         public ICommand AddGuestCommand { get; set; }
         public ICommand RemoveSelectedEpisodeGuestCommand { get; set; }
         public ICommand SavePodcastEpisodeCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public CreatePodcastEpisodeViewModel(
-            IRepository<PodcastEpisode> podcastRepo,
-            IRepository<Guest> guestRepo,
-            Action goBack,
-            Action<Action<Guest>> openGuestDialog)
+        public CreatePodcastEpisodeViewModel(IPodcastEpisodeRepository podcastRepository, INavigationService navigationService)
         {
-            podcastRepository = podcastRepo;
-            guestRepository = guestRepo;
-            _goBack = goBack;
-            _openGuestDialog = openGuestDialog;
+            this.podcastRepository = podcastRepository;
+            this.navigationService = navigationService;
 
-            _podcastEpisode = new PodcastEpisode();
-            _podcastEpisode.Date = DateTime.Today;
-            _podcastEpisode.CaseOfficerName = string.Empty;
+            podcastEpisode = new PodcastEpisode();
+            podcastEpisode.Date = DateTime.Today;
+            podcastEpisode.Status = "Planlagt";
+            podcastEpisode.CaseOfficerName = string.Empty;
 
             StatusOptions = new ObservableCollection<string>
             {
@@ -99,10 +104,7 @@ namespace Soul_Talk.ViewModel
 
         private void AddSelectedGuest()
         {
-            if (_openGuestDialog != null)
-            {
-                _openGuestDialog(AddGuestToEpisode);
-            }
+            navigationService.OpenSelectGuestDialog(AddGuestToEpisode);
         }
 
         private void AddGuestToEpisode(Guest guest)
@@ -112,7 +114,7 @@ namespace Soul_Talk.ViewModel
                 return;
             }
 
-            if (SelectedGuests.Any(item => item.GuestId == guest.GuestId))
+            if (SelectedGuests.Any(g => g.GuestId == guest.GuestId))
             {
                 return;
             }
@@ -122,17 +124,71 @@ namespace Soul_Talk.ViewModel
 
         private void RemoveSelectedGuest()
         {
-            if (SelectedEpisodeGuest != null)
+            if (SelectedEpisodeGuest == null)
             {
-                SelectedGuests.Remove(SelectedEpisodeGuest);
+                return;
             }
+
+            SelectedGuests.Remove(SelectedEpisodeGuest);
+            SelectedEpisodeGuest = null;
         }
 
-        public void SavePodcastEpisode() { }
-
-        public void Cancel()
+        private void SavePodcastEpisode()
         {
-            _goBack?.Invoke();
+            if (!InputIsValid())
+            {
+                return;
+            }
+
+            int podcastEpisodeId = podcastRepository.Add(podcastEpisode);
+
+            foreach (Guest guest in SelectedGuests)
+            {
+                podcastRepository.AddGuestToPodcastEpisode(podcastEpisodeId, guest.GuestId);
+            }
+
+            MessageBox.Show("Podcast-episoden er gemt.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            navigationService.NavigateToPodcastEpisode();
+        }
+
+        private bool InputIsValid()
+        {
+            if (string.IsNullOrWhiteSpace(Title))
+            {
+                MessageBox.Show("Udfyld venligst titel.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (Duration <= 0)
+            {
+                MessageBox.Show("Varighed skal være større end 0.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Status))
+            {
+                MessageBox.Show("Vælg venligst status.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(MeetingPlace))
+            {
+                MessageBox.Show("Udfyld venligst mødested.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(CaseOfficerName))
+            {
+                MessageBox.Show("Udfyld venligst sagsbehandler.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+
+            return true;
+        }
+
+        private void Cancel()
+        {
+            navigationService.NavigateToPodcastEpisode();
         }
     }
 }

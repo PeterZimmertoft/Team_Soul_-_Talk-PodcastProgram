@@ -21,8 +21,8 @@ namespace Soul_Talk.Model
         public Citizen() : base() { }
 
 
-        public Citizen(int CitizenId, string Name, string Phone, string Email, string _cprNumber, string _workStatus, string _workType, string _consentStatus, string _currentStatus, string _specialConsiderations) :
-            base(0, Name, Phone, Email)
+        public Citizen(int CitizenId, string Name, string Phone, string Email, string _cprNumber, string _workStatus, string _workType, string _consentStatus, string _currentStatus, string _specialConsiderations) 
+            : base(0, Name, Phone, Email)
         {
             this.CitizenId = CitizenId;
             this.Name = Name;

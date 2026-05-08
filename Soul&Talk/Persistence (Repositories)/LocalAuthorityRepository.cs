@@ -6,6 +6,10 @@ using Soul_Talk.Model;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
+
+    // Kommune repository, som overholder virksomhedens behov. Da en sagsbehandler kommer fra en kommune,
+    // men den bruges ikke i systemet da den ikke er relevant for UC1, UC2 og UC3. Den er dog implementeret
+    // for at vise hvordan det ville se ud hvis det skulle bruges i fremtiden. 
     public class LocalAuthorityRepository : IRepository<LocalAuthority>
     {
         private readonly string connectionString;

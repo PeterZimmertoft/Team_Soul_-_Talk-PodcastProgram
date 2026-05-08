@@ -1,5 +1,6 @@
 ﻿namespace Soul_Talk.Persistence__Repositories_
 {
+    // Et generisk repository interface, som alle repositories i systemet implementerer. Det indeholder de CRUD operationer, som alle repositories skal have.
     public interface IRepository<T>
     {
         public List<T> GetAll();

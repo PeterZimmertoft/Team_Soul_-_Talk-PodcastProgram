@@ -12,7 +12,7 @@
 
                 <!-- Header -->
                 <StackPanel Margin="0,0,0,25">
-                    <TextBlock Text="Opret gæsteprofil"
+                    <TextBlock Text="{Binding PageTitle}"
                                FontSize="28"
                                FontWeight="Bold" />
 
@@ -23,11 +23,10 @@
                                TextWrapping="Wrap"/>
                 </StackPanel>
 
-                <CheckBox x:Name="CitizenToggle"
-                          Content="Tilføj borgeroplysninger"
+                <CheckBox Content="Tilføj borgeroplysninger"
+                          IsChecked="{Binding HasCitizenInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           FontWeight="SemiBold"
-                          Margin="0,0,0,10"
-                          />
+                          Margin="0,0,0,10"/>
 
                 <Border BorderBrush="#DDDDDD"
                         BorderThickness="1"
@@ -63,13 +62,12 @@
                     </StackPanel>
                 </Border>
 
-                <Border x:Name="CitizenInfoBorder"
-                        BorderBrush="#DDDDDD"
+                <Border BorderBrush="#DDDDDD"
                         BorderThickness="1"
                         Padding="20"
                         Background="White"
                         Margin="0,0,0,20"
-                        IsEnabled="{Binding IsChecked, ElementName=CitizenToggle}">
+                        IsEnabled="{Binding HasCitizenInfo}">
 
                     <StackPanel>
 
@@ -78,8 +76,10 @@
                                    FontWeight="SemiBold"
                                    Margin="0,0,0,20" FontFamily="Book Antiqua"/>
 
-                        <TextBlock Text="CPR-nummer"
-                                   FontWeight="SemiBold"/>
+                        <TextBlock FontWeight="SemiBold">
+                            <Run Text="CPR-nummer"/>
+                            <Run Text=" (DDMMYY-XXXX)" Foreground="#666666"/>
+                        </TextBlock>
                         <TextBox Text="{Binding CprNumber, UpdateSourceTrigger=PropertyChanged}"
                                  Height="32"
                                  Margin="0,5,0,15"/>
@@ -98,12 +98,18 @@
 
                         <TextBlock Text="Samtykkestatus"
                                    FontWeight="SemiBold"/>
-                        <TextBox Text="{Binding ConsentStatus, UpdateSourceTrigger=PropertyChanged}"
-                                 Height="32"
-                                 Margin="0,5,0,15"/>
+                        <ComboBox SelectedValue="{Binding ConsentStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValuePath="Content"
+                                  Height="32"
+                                  Margin="0,5,0,15">
+                            <ComboBoxItem Content="Ja"/>
+                            <ComboBoxItem Content="Nej"/>
+                        </ComboBox>
 
-                        <TextBlock Text="Nuværende status"
-                                   FontWeight="SemiBold"/>
+                        <TextBlock FontWeight="SemiBold">
+                            <Run Text="Nuværende status"/>
+                            <Run Text=" (fx Aktiv/Passiv)" Foreground="#666666"/>
+                        </TextBlock>
                         <TextBox Text="{Binding CurrentStatus, UpdateSourceTrigger=PropertyChanged}"
                                  Height="32"
                                  Margin="0,5,0,15"/>

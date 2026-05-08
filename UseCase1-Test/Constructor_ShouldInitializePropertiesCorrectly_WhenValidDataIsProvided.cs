@@ -7,6 +7,7 @@ namespace UseCase1_Test
     public class Test1
     {
         [TestMethod] 
+        //Test for at teste om en Guest med borgeroplysninger er initialiseret korrekt. 
         public void Constructor_ShouldInitializePropertiesCorrectly_WhenValidDataIsProvided()
         {
             // Arrange

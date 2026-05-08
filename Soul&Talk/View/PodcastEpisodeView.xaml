@@ -9,7 +9,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <Grid Grid.Row="0" Margin="0,0,0,25">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -28,21 +27,16 @@
                     Height="28"
                     Command="{Binding BackCommand}"
                     Background="White"
-                    BorderBrush="Black"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top" />
+                    BorderBrush="Black" />
         </Grid>
 
-        <!-- Main content -->
         <Grid Grid.Row="1">
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="260"/>
                 <ColumnDefinition Width="25"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Left Column: Episode List -->
             <Border Grid.Column="0"
                     BorderBrush="#DDDDDD"
                     BorderThickness="1"
@@ -59,7 +53,8 @@
                                Text="Episodeliste"
                                FontSize="20"
                                FontWeight="SemiBold"
-                               Margin="0,0,0,15" FontFamily="Book Antiqua"/>
+                               Margin="0,0,0,15"
+                               FontFamily="Book Antiqua"/>
 
                     <ListBox Grid.Row="1"
                              ItemsSource="{Binding PodcastEpisodes}"
@@ -79,10 +74,10 @@
                                                    FontWeight="SemiBold"
                                                    TextWrapping="Wrap"/>
 
-                                        <TextBlock Text="{Binding Date}"
-                                                   FontSize="12"
-                                                   Foreground="#666666"
-                                                   Margin="0,4,0,0"/>
+                                        <TextBlock Text="{Binding Date, StringFormat={}{0:dd-MM-yyyy}}"
+                                         FontSize="12"
+                                         Foreground="#666666"
+                                         Margin="0,4,0,0"/>
                                     </StackPanel>
 
                                 </Border>
@@ -94,7 +89,6 @@
                 </Grid>
             </Border>
 
-            <!-- Right Column: Actions & Details -->
             <Border Grid.Column="2"
                     BorderBrush="#DDDDDD"
                     BorderThickness="1"
@@ -104,11 +98,11 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
 
-                        <!-- Actions -->
                         <TextBlock Text="Handlinger"
                                    FontSize="20"
                                    FontWeight="SemiBold"
-                                   Margin="0,0,0,20" FontFamily="Book Antiqua"/>
+                                   Margin="0,0,0,20"
+                                   FontFamily="Book Antiqua"/>
 
                         <StackPanel Orientation="Horizontal"
                                     Margin="0,0,0,25">
@@ -119,26 +113,19 @@
                                     Margin="0,0,10,0"
                                     Command="{Binding CreatePodcastEpisodeCommand}"
                                     Background="White"
-                                    BorderBrush="Black" TextBlock.FontFamily="Book Antiqua"/>
-
-                            <Button Content="Rediger episode"
-                                    Width="130"
-                                    Height="30"
-                                    Margin="0,0,10,0"
-                                    Command="{Binding EditPodcastEpisodeCommand}"
-                                    Background="White"
-                                    BorderBrush="Black" TextBlock.FontFamily="Book Antiqua"/>
+                                    BorderBrush="Black"
+                                    TextBlock.FontFamily="Book Antiqua"/>
 
                             <Button Content="Slet episode"
                                     Width="110"
                                     Height="30"
                                     Command="{Binding DeletePodcastEpisodeCommand}"
                                     Background="#FFFF7575"
-                                    BorderBrush="Black" TextBlock.FontFamily="Book Antiqua"/>
+                                    BorderBrush="Black"
+                                    TextBlock.FontFamily="Book Antiqua"/>
 
                         </StackPanel>
 
-                        <!-- Selected Episode Details -->
                         <Border BorderBrush="#E0E0E0"
                                 BorderThickness="1"
                                 Padding="15"
@@ -150,7 +137,8 @@
                                 <TextBlock Text="Valgt episode:"
                                            FontSize="18"
                                            FontWeight="SemiBold"
-                                           Margin="0,0,0,15" FontFamily="Book Antiqua"/>
+                                           Margin="0,0,0,15"
+                                           FontFamily="Book Antiqua"/>
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -168,96 +156,78 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0"
-                                               Grid.Column="0"
-                                               Text="Titel:"
-                                               FontWeight="SemiBold"
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Titel:" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedPodcastEpisode.Title}" TextWrapping="Wrap" Margin="0,0,0,10"/>
 
-                                    <TextBlock Grid.Row="0"
-                                               Grid.Column="1"
-                                               Text="{Binding SelectedPodcastEpisode.Title}"
-                                               TextWrapping="Wrap"
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="1" 
+                                    Grid.Column="0" 
+                                    Text="Dato:" 
+                                    FontWeight="SemiBold" 
+                                    Margin="0,0,0,10"/>
+                                    
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedPodcastEpisode.Date, StringFormat={}{0:dd-MM-yyyy}}" Margin="0,0,0,10"/>
 
-                                    <TextBlock Grid.Row="1"
-                                               Grid.Column="0"
-                                               Text="Dato:"
-                                               FontWeight="SemiBold"
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Varighed:" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedPodcastEpisode.Duration}" Margin="0,0,0,10"/>
 
-                                    <TextBlock Grid.Row="1"
-                                               Grid.Column="1"
-                                               Text="{Binding SelectedPodcastEpisode.Date}"
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Status:" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedPodcastEpisode.Status}" Margin="0,0,0,10"/>
 
-                                    <TextBlock Grid.Row="2"
-                                               Grid.Column="0"
-                                               Text="Duration:"
-                                               FontWeight="SemiBold"
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Mødested:" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SelectedPodcastEpisode.MeetingPlace}" TextWrapping="Wrap" Margin="0,0,0,10"/>
 
-                                    <TextBlock Grid.Row="2"
-                                               Grid.Column="1"
-                                               Text="{Binding SelectedPodcastEpisode.Duration}"
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Sagsbehandler:" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SelectedPodcastEpisode.CaseOfficerName}" Margin="0,0,0,10"/>
 
-                                    <TextBlock Grid.Row="3"
-                                               Grid.Column="0"
-                                               Text="Status:"
-                                               FontWeight="SemiBold"
-                                               Margin="0,0,0,10"/>
-
-                                    <TextBlock Grid.Row="3"
-                                               Grid.Column="1"
-                                                Text="{Binding SelectedPodcastEpisode.Status}"
-                                               Margin="0,0,0,10"/>
-
-                                    <TextBlock Grid.Row="4"
-                                               Grid.Column="0"
-                                               Text="Mødested:"
-                                               FontWeight="SemiBold"
-                                               Margin="0,0,0,10"/>
-
-                                    <TextBlock Grid.Row="4"
-                                               Grid.Column="1"
-                                                Text="{Binding SelectedPodcastEpisode.MeetingPlace}"
-                                               TextWrapping="Wrap"
-                                               Margin="0,0,0,10"/>
-
-                                    <TextBlock Grid.Row="5"
-                                               Grid.Column="0"
-                                               Text="Sagsbehandler:"
-                                               FontWeight="SemiBold"
-                                               Margin="0,0,0,10"/>
-
-                                    <TextBlock Grid.Row="5"
-                                               Grid.Column="1"
-                                               Text="{Binding SelectedPodcastEpisode.CaseOfficerName}"
-                                               Margin="0,0,0,10"/>
-
-                                    <TextBlock Grid.Row="6"
-                                               Grid.Column="0"
-                                               Text="Note:"
-                                               FontWeight="SemiBold"
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Note:" FontWeight="SemiBold" Margin="0,0,0,10"/>
 
                                     <Border Grid.Row="6"
+                                            Grid.Column="1"
                                             BorderBrush="#DDDDDD"
                                             BorderThickness="1"
                                             Padding="10"
                                             MinHeight="90"
                                             Background="#FAFAFA"
-                                            Margin="55,0,0,10" Grid.ColumnSpan="2">
+                                            Margin="0,0,0,10">
 
                                         <TextBlock Text="{Binding SelectedPodcastEpisode.Note}"
-                                                   TextWrapping="Wrap" Margin="-1,0,0,-1"/>
+                                                   TextWrapping="Wrap"/>
                                     </Border>
 
                                 </Grid>
 
                             </StackPanel>
                         </Border>
+
+                        <Border BorderBrush="#E0E0E0"
+                                BorderThickness="1"
+                                Padding="15"
+                                Background="White">
+
+                            <StackPanel>
+                                <TextBlock Text="Tilknyttede gæster:"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Margin="0,0,0,10"
+                                           FontFamily="Book Antiqua"/>
+
+                                <ListBox ItemsSource="{Binding SelectedPodcastEpisodeGuests}"
+                                         MinHeight="80"
+                                         MaxHeight="150">
+
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="5">
+                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding Email}" FontSize="12" Foreground="#666666"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+
+                                </ListBox>
+                            </StackPanel>
+                        </Border>
+
                     </StackPanel>
                 </ScrollViewer>
             </Border>

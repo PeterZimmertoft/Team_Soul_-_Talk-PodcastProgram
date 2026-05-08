@@ -63,7 +63,7 @@
                                     Height="32"
                                     Margin="0,5,0,15"/>
 
-                         <TextBlock Text="Varighed i timer"
+                        <TextBlock Text="Varighed i timer"
                                    FontWeight="SemiBold"/>
                         <TextBox Text="{Binding Duration, UpdateSourceTrigger=PropertyChanged}"
                                  Height="32"
@@ -82,9 +82,9 @@
                                  Height="32"
                                  Margin="0,5,0,15"/>
 
-                          <TextBlock Text="Sagsbehandler"
+                        <TextBlock Text="Sagsbehandler"
                                       FontWeight="SemiBold"/>
-                          <TextBox Text="{Binding CaseOfficerName, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Text="{Binding CaseOfficerName, UpdateSourceTrigger=PropertyChanged}"
                                   Height="32"
                                   Margin="0,5,0,15"/>
 
