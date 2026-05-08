@@ -1,6 +1,3 @@
-USE SoulTalk;
-GO
-
 CREATE TABLE LocalAuthority
 (
     LocalAuthorityId INT IDENTITY(1,1) NOT NULL,
