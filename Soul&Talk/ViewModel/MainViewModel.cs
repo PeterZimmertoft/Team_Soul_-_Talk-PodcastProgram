@@ -23,7 +23,6 @@ namespace Soul_Talk.ViewModel
         {
             _navigationService = new NavigationService(connectionString);
             _navigationService.CurrentViewModelChanged += OnCurrentViewModelChanged;
-
             ShowMainViewCommand = new RelayCommand(ShowMainView);
             ShowGuestViewCommand = new RelayCommand(ShowGuestView);
             ShowPodcastEpisodeViewCommand = new RelayCommand(ShowPodcastEpisodeView);
