@@ -8,51 +8,27 @@ namespace Soul_Talk.ViewModel
     {
         private readonly INavigationService _navigationService;
 
-        public BaseViewModel CurrentViewModel
+        public BaseViewModel? CurrentViewModel
         {
             get { return _navigationService.CurrentViewModel; }
         }
 
-        public ICommand ShowMainViewCommand { get; set; }
-        public ICommand ShowGuestViewCommand { get; set; }
-        public ICommand ShowPodcastEpisodeViewCommand { get; set; }
-        public ICommand ShowCreateGuestViewCommand { get; set; }
-        public ICommand ShowCreatePodcastEpisodeViewCommand { get; set; }
+        public ICommand ShowMainViewCommand { get; }
+        public ICommand ShowGuestViewCommand { get; }
+        public ICommand ShowPodcastEpisodeViewCommand { get; }
+        public ICommand ShowCreateGuestViewCommand { get; }
+        public ICommand ShowCreatePodcastEpisodeViewCommand { get; }
 
         public MainViewModel(string connectionString)
         {
             _navigationService = new NavigationService(connectionString);
             _navigationService.CurrentViewModelChanged += OnCurrentViewModelChanged;
-            ShowMainViewCommand = new RelayCommand(ShowMainView);
-            ShowGuestViewCommand = new RelayCommand(ShowGuestView);
-            ShowPodcastEpisodeViewCommand = new RelayCommand(ShowPodcastEpisodeView);
-            ShowCreateGuestViewCommand = new RelayCommand(ShowCreateGuestView);
-            ShowCreatePodcastEpisodeViewCommand = new RelayCommand(ShowCreatePodcastEpisodeView);
-        }
 
-        private void ShowMainView()
-        {
-            _navigationService.NavigateToMain();
-        }
-
-        private void ShowGuestView()
-        {
-            _navigationService.NavigateToGuest();
-        }
-
-        private void ShowPodcastEpisodeView()
-        {
-            _navigationService.NavigateToPodcastEpisode();
-        }
-
-        private void ShowCreateGuestView()
-        {
-            _navigationService.NavigateToCreateGuest();
-        }
-
-        private void ShowCreatePodcastEpisodeView()
-        {
-            _navigationService.NavigateToCreatePodcastEpisode();
+            ShowMainViewCommand = new ShowMainViewNavigationCommand(_navigationService);
+            ShowGuestViewCommand = new ShowGuestViewNavigationCommand(_navigationService);
+            ShowPodcastEpisodeViewCommand = new ShowPodcastEpisodeViewNavigationCommand(_navigationService);
+            ShowCreateGuestViewCommand = new ShowCreateGuestViewNavigationCommand(_navigationService);
+            ShowCreatePodcastEpisodeViewCommand = new ShowCreatePodcastEpisodeViewNavigationCommand(_navigationService);
         }
 
         private void OnCurrentViewModelChanged()

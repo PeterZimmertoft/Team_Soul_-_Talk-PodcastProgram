@@ -5,7 +5,6 @@ using Soul_Talk.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Soul_Talk.ViewModel
@@ -13,7 +12,10 @@ namespace Soul_Talk.ViewModel
     public class CreatePodcastEpisodeViewModel : BaseViewModel
     {
         private readonly IPodcastEpisodeRepository podcastRepository;
+        private readonly ICaseOfficerRepository caseOfficerRepository;
+        private readonly ISelectGuestDialogService selectGuestDialogService;
         private readonly INavigationService navigationService;
+        private readonly IMessageService messageService;
         private readonly PodcastEpisode podcastEpisode;
 
         public string Title
@@ -28,10 +30,16 @@ namespace Soul_Talk.ViewModel
             set { podcastEpisode.Date = value; OnPropertyChanged(nameof(Date)); }
         }
 
-        public int Duration
+        private int durationHours;
+        public int DurationHours
         {
-            get { return podcastEpisode.Duration; }
-            set { podcastEpisode.Duration = value; OnPropertyChanged(nameof(Duration)); }
+            get { return durationHours; }
+            set
+            {
+                durationHours = value;
+                podcastEpisode.Duration = TimeSpan.FromHours(durationHours);
+                OnPropertyChanged(nameof(DurationHours));
+            }
         }
 
         public string Status
@@ -72,20 +80,29 @@ namespace Soul_Talk.ViewModel
             }
         }
 
-        public ICommand AddGuestCommand { get; set; }
-        public ICommand RemoveSelectedEpisodeGuestCommand { get; set; }
-        public ICommand SavePodcastEpisodeCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
+        public ICommand AddGuestCommand { get; }
+        public ICommand RemoveSelectedEpisodeGuestCommand { get; }
+        public ICommand SavePodcastEpisodeCommand { get; }
+        public ICommand CancelCommand { get; }
 
-        public CreatePodcastEpisodeViewModel(IPodcastEpisodeRepository podcastRepository, INavigationService navigationService)
+        public CreatePodcastEpisodeViewModel(
+            IPodcastEpisodeRepository podcastRepository,
+            ICaseOfficerRepository caseOfficerRepository,
+            ISelectGuestDialogService selectGuestDialogService,
+            INavigationService navigationService,
+            IMessageService messageService)
         {
             this.podcastRepository = podcastRepository;
+            this.caseOfficerRepository = caseOfficerRepository;
+            this.selectGuestDialogService = selectGuestDialogService;
             this.navigationService = navigationService;
+            this.messageService = messageService;
 
             podcastEpisode = new PodcastEpisode();
             podcastEpisode.Date = DateTime.Today;
             podcastEpisode.Status = "Planlagt";
             podcastEpisode.CaseOfficerName = string.Empty;
+            DurationHours = 1;
 
             StatusOptions = new ObservableCollection<string>
             {
@@ -96,15 +113,15 @@ namespace Soul_Talk.ViewModel
 
             SelectedGuests = new ObservableCollection<Guest>();
 
-            AddGuestCommand = new RelayCommand(AddSelectedGuest);
-            RemoveSelectedEpisodeGuestCommand = new RelayCommand(RemoveSelectedGuest);
-            SavePodcastEpisodeCommand = new RelayCommand(SavePodcastEpisode);
-            CancelCommand = new RelayCommand(Cancel);
+            AddGuestCommand = new CreatePodcastEpisodeAddGuestCommand(this);
+            RemoveSelectedEpisodeGuestCommand = new CreatePodcastEpisodeRemoveSelectedGuestCommand(this);
+            SavePodcastEpisodeCommand = new CreatePodcastEpisodeSaveCommand(this);
+            CancelCommand = new CreatePodcastEpisodeCancelNavigationCommand(this);
         }
 
-        private void AddSelectedGuest()
+        public void AddSelectedGuest()
         {
-            navigationService.OpenSelectGuestDialog(AddGuestToEpisode);
+            selectGuestDialogService.OpenSelectGuestDialog(AddGuestToEpisode);
         }
 
         private void AddGuestToEpisode(Guest guest)
@@ -122,7 +139,7 @@ namespace Soul_Talk.ViewModel
             SelectedGuests.Add(guest);
         }
 
-        private void RemoveSelectedGuest()
+        public void RemoveSelectedGuest()
         {
             if (SelectedEpisodeGuest == null)
             {
@@ -133,9 +150,14 @@ namespace Soul_Talk.ViewModel
             SelectedEpisodeGuest = null;
         }
 
-        private void SavePodcastEpisode()
+        public void SavePodcastEpisode()
         {
             if (!InputIsValid())
+            {
+                return;
+            }
+
+            if (!TrySetCaseOfficerId())
             {
                 return;
             }
@@ -147,7 +169,7 @@ namespace Soul_Talk.ViewModel
                 podcastRepository.AddGuestToPodcastEpisode(podcastEpisodeId, guest.GuestId);
             }
 
-            MessageBox.Show("Podcast-episoden er gemt.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            messageService.ShowInfo("Podcast-episoden er gemt.");
             navigationService.NavigateToPodcastEpisode();
         }
 
@@ -155,38 +177,49 @@ namespace Soul_Talk.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Title))
             {
-                MessageBox.Show("Udfyld venligst titel.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                messageService.ShowWarning("Udfyld venligst titel.");
                 return false;
             }
 
-            if (Duration <= 0)
+            if (DurationHours <= 0)
             {
-                MessageBox.Show("Varighed skal være større end 0.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                messageService.ShowWarning("Varighed skal være større end 0.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(Status))
             {
-                MessageBox.Show("Vælg venligst status.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                messageService.ShowWarning("Vælg venligst status.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(MeetingPlace))
             {
-                MessageBox.Show("Udfyld venligst mødested.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                messageService.ShowWarning("Udfyld venligst mødested.");
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(CaseOfficerName))
             {
-                MessageBox.Show("Udfyld venligst sagsbehandler.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                messageService.ShowWarning("Udfyld venligst sagsbehandler.");
                 return false;
             }
 
             return true;
         }
 
-        private void Cancel()
+        private bool TrySetCaseOfficerId()
+        {
+            string caseOfficerName = CaseOfficerName.Trim();
+
+            CaseOfficer caseOfficer = caseOfficerRepository.GetOrCreateByName(caseOfficerName);
+
+            podcastEpisode.CaseOfficerId = caseOfficer.CaseOfficerId;
+            podcastEpisode.CaseOfficerName = caseOfficer.Name;
+            return true;
+        }
+
+        public void Cancel()
         {
             navigationService.NavigateToPodcastEpisode();
         }

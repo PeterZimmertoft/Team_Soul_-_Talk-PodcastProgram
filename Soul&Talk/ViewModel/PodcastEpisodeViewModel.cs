@@ -2,8 +2,8 @@
 using Soul_Talk.Model;
 using Soul_Talk.Persistence__Repositories_;
 using Soul_Talk.Services;
+using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Soul_Talk.ViewModel
@@ -12,12 +12,13 @@ namespace Soul_Talk.ViewModel
     {
         private readonly IPodcastEpisodeRepository podcastEpisodeRepository;
         private readonly INavigationService navigationService;
+        private readonly IMessageService messageService;
 
         public ObservableCollection<PodcastEpisode> PodcastEpisodes { get; set; }
         public ObservableCollection<Guest> SelectedPodcastEpisodeGuests { get; set; }
 
-        private PodcastEpisode selectedPodcastEpisode;
-        public PodcastEpisode SelectedPodcastEpisode
+        private PodcastEpisode? selectedPodcastEpisode;
+        public PodcastEpisode? SelectedPodcastEpisode
         {
             get { return selectedPodcastEpisode; }
             set
@@ -28,23 +29,27 @@ namespace Soul_Talk.ViewModel
             }
         }
 
-        public ICommand LoadPodcastEpisodesCommand { get; set; }
-        public ICommand CreatePodcastEpisodeCommand { get; set; }
-        public ICommand DeletePodcastEpisodeCommand { get; set; }
-        public ICommand BackCommand { get; set; }
+        public ICommand LoadPodcastEpisodesCommand { get; }
+        public ICommand CreatePodcastEpisodeCommand { get; }
+        public ICommand DeletePodcastEpisodeCommand { get; }
+        public ICommand BackCommand { get; }
 
-        public PodcastEpisodeViewModel(IPodcastEpisodeRepository repository, INavigationService navigationService)
+        public PodcastEpisodeViewModel(
+            IPodcastEpisodeRepository repository,
+            INavigationService navigationService,
+            IMessageService messageService)
         {
             podcastEpisodeRepository = repository;
             this.navigationService = navigationService;
+            this.messageService = messageService;
 
             PodcastEpisodes = new ObservableCollection<PodcastEpisode>();
             SelectedPodcastEpisodeGuests = new ObservableCollection<Guest>();
 
-            LoadPodcastEpisodesCommand = new RelayCommand(LoadPodcastEpisodes);
-            CreatePodcastEpisodeCommand = new RelayCommand(CreatePodcastEpisode);
-            DeletePodcastEpisodeCommand = new RelayCommand(DeletePodcastEpisode);
-            BackCommand = new RelayCommand(GoBack);
+            LoadPodcastEpisodesCommand = new PodcastEpisodeLoadCommand(this);
+            CreatePodcastEpisodeCommand = new PodcastEpisodeCreateNavigationCommand(this);
+            DeletePodcastEpisodeCommand = new PodcastEpisodeDeleteCommand(this);
+            BackCommand = new PodcastEpisodeBackNavigationCommand(this);
 
             LoadPodcastEpisodes();
         }
@@ -74,26 +79,47 @@ namespace Soul_Talk.ViewModel
             }
         }
 
-        private void CreatePodcastEpisode()
+        public void CreatePodcastEpisode()
         {
             navigationService.NavigateToCreatePodcastEpisode();
         }
 
-        private void DeletePodcastEpisode()
+        public void DeletePodcastEpisode()
         {
             if (SelectedPodcastEpisode == null)
             {
-                MessageBox.Show("Vælg en episode først.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                messageService.ShowInfo("Vælg en episode først.");
                 return;
             }
 
             PodcastEpisode episodeToDelete = SelectedPodcastEpisode;
-            podcastEpisodeRepository.Delete(episodeToDelete.PodcastEpisodeID);
-            PodcastEpisodes.Remove(episodeToDelete);
-            SelectedPodcastEpisode = null;
+
+            bool confirmed = messageService.Confirm(
+                $"Er du sikker på, at du vil slette podcast-episoden:\n\n{episodeToDelete.Title}",
+                "Bekræft sletning");
+
+            if (!confirmed)
+            {
+                return;
+            }
+
+            try
+            {
+                podcastEpisodeRepository.Delete(episodeToDelete.PodcastEpisodeID);
+
+                PodcastEpisodes.Remove(episodeToDelete);
+                SelectedPodcastEpisodeGuests.Clear();
+                SelectedPodcastEpisode = null;
+
+                messageService.ShowInfo("Podcast-episoden er slettet.");
+            }
+            catch (Exception ex)
+            {
+                messageService.ShowError("Podcast-episoden kunne ikke slettes: " + ex.Message);
+            }
         }
 
-        private void GoBack()
+        public void GoBack()
         {
             navigationService.NavigateToMain();
         }

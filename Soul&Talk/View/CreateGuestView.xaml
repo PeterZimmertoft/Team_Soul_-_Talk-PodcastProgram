@@ -39,7 +39,8 @@
                         <TextBlock Text="Basisoplysninger"
                                    FontSize="20"
                                    FontWeight="SemiBold"
-                                   Margin="0,0,0,20" FontFamily="Book Antiqua"/>
+                                   Margin="0,0,0,20"
+                                   FontFamily="Book Antiqua"/>
 
                         <TextBlock Text="Navn"
                                    FontWeight="SemiBold"/>
@@ -74,7 +75,8 @@
                         <TextBlock Text="Borgeroplysninger"
                                    FontSize="20"
                                    FontWeight="SemiBold"
-                                   Margin="0,0,0,20" FontFamily="Book Antiqua"/>
+                                   Margin="0,0,0,20"
+                                   FontFamily="Book Antiqua"/>
 
                         <TextBlock FontWeight="SemiBold">
                             <Run Text="CPR-nummer"/>
@@ -114,6 +116,12 @@
                                  Height="32"
                                  Margin="0,5,0,15"/>
 
+                        <TextBlock Text="Sagsbehandler"
+                                   FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding CaseOfficerName, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="32"
+                                 Margin="0,5,0,15"/>
+
                         <TextBlock Text="Særlige hensyn"
                                    FontWeight="SemiBold"/>
                         <TextBox Text="{Binding SpecialConsiderations, UpdateSourceTrigger=PropertyChanged}"
@@ -136,21 +144,17 @@
                             Margin="0,0,10,0"
                             Command="{Binding SaveGuestCommand}"
                             Background="White"
-                            BorderBrush="Black" FontFamily="Book Antiqua"/>
+                            BorderBrush="Black"
+                            FontFamily="Book Antiqua"/>
                     <Button Content="Annuller"
                             Width="117"
                             Height="33"
                             Command="{Binding CancelCommand}"
                             Background="White"
-                            BorderBrush="Black" FontFamily="Book Antiqua"/>
+                            BorderBrush="Black"
+                            FontFamily="Book Antiqua"/>
 
                 </StackPanel>
-
-                <TextBlock Text="{Binding ErrorMessage}"
-                           Foreground="Red"
-                           Margin="0,12,0,0"
-                           TextWrapping="Wrap"
-                           FontFamily="Book Antiqua"/>
 
             </StackPanel>
         </Grid>

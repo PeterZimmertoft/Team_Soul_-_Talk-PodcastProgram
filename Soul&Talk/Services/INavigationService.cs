@@ -6,7 +6,7 @@ namespace Soul_Talk.Services
 {
     public interface INavigationService
     {
-        BaseViewModel CurrentViewModel { get; }
+        BaseViewModel? CurrentViewModel { get; }
 
         event Action CurrentViewModelChanged;
 
@@ -16,7 +16,5 @@ namespace Soul_Talk.Services
         void NavigateToEditGuest(Guest guest);
         void NavigateToPodcastEpisode();
         void NavigateToCreatePodcastEpisode();
-
-        void OpenSelectGuestDialog(Action<Guest> onGuestSelected);
     }
 }

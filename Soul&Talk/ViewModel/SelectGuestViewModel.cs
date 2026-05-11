@@ -1,6 +1,7 @@
 ﻿using Soul_Talk.Commands;
 using Soul_Talk.Model;
 using Soul_Talk.Persistence__Repositories_;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -21,11 +22,11 @@ namespace Soul_Talk.ViewModel
             set { _selectedGuest = value; OnPropertyChanged(nameof(SelectedGuest)); }
         }
 
-        public ICommand LoadGuestsCommand { get; set; }
-        public ICommand ConfirmGuestSelectionCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
+        public ICommand LoadGuestsCommand { get; }
+        public ICommand ConfirmGuestSelectionCommand { get; }
+        public ICommand CancelCommand { get; }
 
-        public SelectGuestViewModel(IGuestRepository repository, System.Action<Guest> confirmSelection, System.Action closeDialog)
+        public SelectGuestViewModel(IGuestRepository repository, Action<Guest> confirmSelection, Action closeDialog)
         {
             guestRepository = repository;
             _confirmSelection = confirmSelection;
@@ -33,18 +34,22 @@ namespace Soul_Talk.ViewModel
 
             Guests = new ObservableCollection<Guest>();
 
-            LoadGuestsCommand = new RelayCommand(() => LoadGuests());
-            ConfirmGuestSelectionCommand = new RelayCommand(() => ConfirmGuestSelection());
-            CancelCommand = new RelayCommand(() => Cancel());
+            LoadGuestsCommand = new SelectGuestLoadCommand(this);
+            ConfirmGuestSelectionCommand = new SelectGuestConfirmCommand(this);
+            CancelCommand = new SelectGuestCancelCommand(this);
 
             LoadGuests();
         }
 
         public void LoadGuests()
         {
+            Guests.Clear();
+
             var guests = guestRepository.GetAll();
             foreach (var g in guests)
+            {
                 Guests.Add(g);
+            }
         }
 
         public void ConfirmGuestSelection()

@@ -4,7 +4,6 @@ using Soul_Talk.Persistence__Repositories_;
 using Soul_Talk.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 
 namespace Soul_Talk.ViewModel
@@ -13,6 +12,7 @@ namespace Soul_Talk.ViewModel
     {
         private readonly IGuestRepository _guestRepository;
         private readonly INavigationService _navigationService;
+        private readonly IMessageService _messageService;
 
         public ObservableCollection<Guest> Guests { get; set; }
 
@@ -39,24 +39,25 @@ namespace Soul_Talk.ViewModel
             }
         }
 
-        public ICommand LoadGuestsCommand { get; set; }
-        public ICommand CreateGuestCommand { get; set; }
-        public ICommand EditGuestCommand { get; set; }
-        public ICommand DeleteGuestCommand { get; set; }
-        public ICommand BackCommand { get; set; }
+        public ICommand LoadGuestsCommand { get; }
+        public ICommand CreateGuestCommand { get; }
+        public ICommand EditGuestCommand { get; }
+        public ICommand DeleteGuestCommand { get; }
+        public ICommand BackCommand { get; }
 
-        public GuestViewModel(IGuestRepository guestRepository, INavigationService navigationService)
+        public GuestViewModel(IGuestRepository guestRepository, INavigationService navigationService, IMessageService messageService)
         {
             _guestRepository = guestRepository;
             _navigationService = navigationService;
+            _messageService = messageService;
 
             Guests = new ObservableCollection<Guest>();
 
-            LoadGuestsCommand = new RelayCommand(LoadGuests);
-            CreateGuestCommand = new RelayCommand(CreateGuest);
-            EditGuestCommand = new RelayCommand(EditGuest);
-            DeleteGuestCommand = new RelayCommand(DeleteGuest);
-            BackCommand = new RelayCommand(GoBack);
+            LoadGuestsCommand = new GuestLoadCommand(this);
+            CreateGuestCommand = new GuestCreateNavigationCommand(this);
+            EditGuestCommand = new GuestEditCommand(this);
+            DeleteGuestCommand = new GuestDeleteCommand(this);
+            BackCommand = new GuestBackNavigationCommand(this);
 
             LoadGuests();
         }
@@ -84,37 +85,35 @@ namespace Soul_Talk.ViewModel
             SelectedCitizen = _guestRepository.GetCitizenForGuest(SelectedGuest.GuestId);
         }
 
-        private void CreateGuest()
+        public void CreateGuest()
         {
             _navigationService.NavigateToCreateGuest();
         }
 
-        private void EditGuest()
+        public void EditGuest()
         {
             if (SelectedGuest == null)
             {
-                MessageBox.Show("Vælg først en gæst fra listen.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                _messageService.ShowInfo("Vælg først en gæst fra listen.");
                 return;
             }
 
             _navigationService.NavigateToEditGuest(SelectedGuest);
         }
 
-        private void DeleteGuest()
+        public void DeleteGuest()
         {
             if (SelectedGuest == null)
             {
-                MessageBox.Show("Vælg først en gæst fra listen.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                _messageService.ShowInfo("Vælg først en gæst fra listen.");
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show(
+            bool confirmed = _messageService.Confirm(
                 "Er du sikker på, at du vil slette " + SelectedGuest.Name + "?",
-                "Bekræft sletning",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning);
+                "Bekræft sletning");
 
-            if (result != MessageBoxResult.Yes)
+            if (!confirmed)
             {
                 return;
             }
@@ -131,11 +130,11 @@ namespace Soul_Talk.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gæsten kunne ikke slettes: " + ex.Message, "Fejl", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageService.ShowError("Gæsten kunne ikke slettes: " + ex.Message);
             }
         }
 
-        private void GoBack()
+        public void GoBack()
         {
             _navigationService.NavigateToMain();
         }

@@ -65,7 +65,7 @@
 
                         <TextBlock Text="Varighed i timer"
                                    FontWeight="SemiBold"/>
-                        <TextBox Text="{Binding Duration, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Text="{Binding DurationHours, UpdateSourceTrigger=PropertyChanged}"
                                  Height="32"
                                  Margin="0,5,0,15"/>
 

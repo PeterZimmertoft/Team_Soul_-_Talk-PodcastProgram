@@ -6,21 +6,21 @@ namespace Soul_Talk.Model
 {
     public class CaseOfficer
     {
-        public int CaseOfficerId {  get; set; }
-        public string Name { get; set; }
-        public string Department { get; set; }
-        public string _phone {  get; private set; }
-        public string _email { get; private set; }
+        public int CaseOfficerId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Department { get; set; } = string.Empty;
+        public string Phone { get; private set; } = string.Empty;
+        public string Email { get; private set; } = string.Empty;
 
+        public CaseOfficer() { }
 
-        public CaseOfficer() : base() { }
-        public CaseOfficer(int CaseOfficerId, string Name, string Department, string phone, string email)
+        public CaseOfficer(int caseOfficerId, string name, string department, string phone, string email)
         {
-            this.CaseOfficerId = CaseOfficerId;
-            this.Name = Name;
-            this.Department = Department;
-            this._phone = phone;
-            this._email = email;
-       }
+            CaseOfficerId = caseOfficerId;
+            Name = name;
+            Department = department;
+            Phone = phone;
+            Email = email;
+        }
     }
 }

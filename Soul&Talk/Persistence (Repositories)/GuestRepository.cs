@@ -6,7 +6,6 @@ using Soul_Talk.Model;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    // UC1 og UC3: Opret, rediger og slet gæsteprofil.
     public class GuestRepository : IGuestRepository
     {
         private readonly string connectionString;
@@ -54,13 +53,7 @@ namespace Soul_Talk.Persistence__Repositories_
             }
         }
 
-        public int Add(Guest model)
-        {
-            return AddGuest(model, null);
-        }
-
-        // Overload, der tillader tilknytning af en Citizen ved oprettelse af en Guest. Hvis citizenId er null, oprettes Guest uden tilknytning til en Citizen.
-        public int AddGuest(Guest guest, int? citizenId)
+        public int Add(Guest guest, int? citizenId = null)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -68,46 +61,22 @@ namespace Soul_Talk.Persistence__Repositories_
 
                 SqlCommand cmd = new SqlCommand(
                     "INSERT INTO Guest (Name, Phone, Email, CitizenId) " +
-                    "VALUES (@Name, @Phone, @Email, @CitizenId)",
+                    "VALUES (@Name, @Phone, @Email, @CitizenId); " +
+                    "SELECT CAST(SCOPE_IDENTITY() AS int);",
                     connection);
 
                 cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = guest.Name;
-                cmd.Parameters.Add("@Phone", SqlDbType.NVarChar, 20).Value = guest.Phone;
+                cmd.Parameters.Add("@Phone", SqlDbType.NVarChar, 20).Value =
+                    string.IsNullOrWhiteSpace(guest.Phone) ? DBNull.Value : guest.Phone;
                 cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = guest.Email;
+                cmd.Parameters.Add("@CitizenId", SqlDbType.Int).Value =
+                    citizenId.HasValue ? citizenId.Value : DBNull.Value;
 
-                if (citizenId.HasValue)
-                {
-                    cmd.Parameters.Add("@CitizenId", SqlDbType.Int).Value = citizenId.Value;
-                }
-                else
-                {
-                    cmd.Parameters.Add("@CitizenId", SqlDbType.Int).Value = DBNull.Value;
-                }
-
-                cmd.ExecuteNonQuery();
-
-                SqlCommand getIdCmd = new SqlCommand(
-                    "SELECT TOP 1 GuestId FROM Guest " +
-                    "WHERE Name = @Name AND Phone = @Phone AND Email = @Email " +
-                    "ORDER BY GuestId DESC",
-                    connection);
-
-                getIdCmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = guest.Name;
-                getIdCmd.Parameters.Add("@Phone", SqlDbType.NVarChar, 20).Value = guest.Phone;
-                getIdCmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = guest.Email;
-
-                return Convert.ToInt32(getIdCmd.ExecuteScalar());
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
 
-
-        public void Update(Guest model)
-        {
-            int? citizenId = GetCitizenIdForGuest(model.GuestId);
-            UpdateGuest(model, citizenId);
-        }
-
-        public void UpdateGuest(Guest guest, int? citizenId)
+        public void Update(Guest guest, int? citizenId = null)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -119,27 +88,11 @@ namespace Soul_Talk.Persistence__Repositories_
                     connection);
 
                 cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = guest.Name;
-
-                if (guest.Phone == null || guest.Phone == "")
-                {
-                    cmd.Parameters.Add("@Phone", SqlDbType.NVarChar, 20).Value = DBNull.Value;
-                }
-                else
-                {
-                    cmd.Parameters.Add("@Phone", SqlDbType.NVarChar, 20).Value = guest.Phone;
-                }
-
+                cmd.Parameters.Add("@Phone", SqlDbType.NVarChar, 20).Value =
+                    string.IsNullOrWhiteSpace(guest.Phone) ? DBNull.Value : guest.Phone;
                 cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 50).Value = guest.Email;
-
-                if (citizenId.HasValue)
-                {
-                    cmd.Parameters.Add("@CitizenId", SqlDbType.Int).Value = citizenId.Value;
-                }
-                else
-                {
-                    cmd.Parameters.Add("@CitizenId", SqlDbType.Int).Value = DBNull.Value;
-                }
-
+                cmd.Parameters.Add("@CitizenId", SqlDbType.Int).Value =
+                    citizenId.HasValue ? citizenId.Value : DBNull.Value;
                 cmd.Parameters.Add("@GuestId", SqlDbType.Int).Value = guest.GuestId;
 
                 cmd.ExecuteNonQuery();
@@ -154,7 +107,8 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand deleteEpisodeLinks = new SqlCommand("DELETE FROM PodcastEpisodeGuests WHERE GuestId = @GuestId", connection);
+                SqlCommand deleteEpisodeLinks = new SqlCommand(
+                    "DELETE FROM PodcastEpisodeGuests WHERE GuestId = @GuestId", connection);
                 deleteEpisodeLinks.Parameters.Add("@GuestId", SqlDbType.Int).Value = id;
                 deleteEpisodeLinks.ExecuteNonQuery();
 
@@ -196,8 +150,7 @@ namespace Soul_Talk.Persistence__Repositories_
                 connection.Open();
 
                 SqlCommand cmd = new SqlCommand(
-                    "SELECT COUNT(1) FROM Guest " +
-                    "WHERE Name = @Name AND Phone = @Phone AND Email = @Email AND GuestId <> @GuestId",
+                    "SELECT COUNT(1) FROM Guest WHERE Name = @Name AND Phone = @Phone AND Email = @Email AND GuestId <> @GuestId",
                     connection);
 
                 cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 50).Value = name;
@@ -219,17 +172,11 @@ namespace Soul_Talk.Persistence__Repositories_
                 cmd.Parameters.Add("@GuestId", SqlDbType.Int).Value = guestId;
 
                 object result = cmd.ExecuteScalar();
-
-                if (result == null || result == DBNull.Value)
-                {
-                    return null;
-                }
-
-                return Convert.ToInt32(result);
+                return result == null || result == DBNull.Value ? null : Convert.ToInt32(result);
             }
         }
 
-        public Citizen GetCitizenForGuest(int guestId)
+        public Citizen? GetCitizenForGuest(int guestId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -237,7 +184,7 @@ namespace Soul_Talk.Persistence__Repositories_
 
                 SqlCommand cmd = new SqlCommand(
                     "SELECT c.CitizenId, c.Name, c.Phone, c.Email, c.CprNumber, c.WorkStatus, c.WorkType, " +
-                    "c.ConsentStatus, c.CurrentStatus, c.SpecialConsiderations " +
+                    "c.ConsentStatus, c.CurrentStatus, c.SpecialConsiderations, c.CaseOfficerId " +
                     "FROM Guest g INNER JOIN Citizen c ON g.CitizenId = c.CitizenId " +
                     "WHERE g.GuestId = @GuestId",
                     connection);
@@ -253,37 +200,32 @@ namespace Soul_Talk.Persistence__Repositories_
 
         private static Guest ReadGuest(SqlDataReader reader)
         {
-            Guest guest = new Guest();
-
-            guest.GuestId = reader.GetInt32(reader.GetOrdinal("GuestId"));
-            guest.Name = reader["Name"] as string;
-            guest.Phone = reader["Phone"] == DBNull.Value ? null : reader["Phone"].ToString();
-            guest.Email = reader["Email"] as string;
-
-            return guest;
+            return new Guest
+            {
+                GuestId = reader.GetInt32(reader.GetOrdinal("GuestId")),
+                Name = reader["Name"] == DBNull.Value ? string.Empty : reader["Name"].ToString() ?? string.Empty,
+                Phone = reader["Phone"] == DBNull.Value ? string.Empty : reader["Phone"].ToString() ?? string.Empty,
+                Email = reader["Email"] == DBNull.Value ? string.Empty : reader["Email"].ToString() ?? string.Empty
+            };
         }
 
         private static Citizen ReadCitizen(SqlDataReader reader)
         {
-            string consentStatus = "Nej";
-
-            if (Convert.ToBoolean(reader["ConsentStatus"]))
-            {
-                consentStatus = "Ja";
-            }
+            string consentStatus = Convert.ToBoolean(reader["ConsentStatus"]) ? "Ja" : "Nej";
+            int caseOfficerId = reader["CaseOfficerId"] == DBNull.Value ? 0 : Convert.ToInt32(reader["CaseOfficerId"]);
 
             return new Citizen(
                 reader.GetInt32(reader.GetOrdinal("CitizenId")),
-                reader["Name"] as string,
-                reader["Phone"] == DBNull.Value ? null : reader["Phone"].ToString(),
-                reader["Email"] as string,
-                reader["CprNumber"] as string,
-                reader["WorkStatus"] as string,
-                reader["WorkType"] as string,
+                reader["Name"] == DBNull.Value ? string.Empty : reader["Name"].ToString() ?? string.Empty,
+                reader["Phone"] == DBNull.Value ? string.Empty : reader["Phone"].ToString() ?? string.Empty,
+                reader["Email"] == DBNull.Value ? string.Empty : reader["Email"].ToString() ?? string.Empty,
+                reader["CprNumber"] == DBNull.Value ? string.Empty : reader["CprNumber"].ToString() ?? string.Empty,
+                reader["WorkStatus"] == DBNull.Value ? string.Empty : reader["WorkStatus"].ToString() ?? string.Empty,
+                reader["WorkType"] == DBNull.Value ? string.Empty : reader["WorkType"].ToString() ?? string.Empty,
                 consentStatus,
-                reader["CurrentStatus"] as string,
-                reader["SpecialConsiderations"] == DBNull.Value ? null : reader["SpecialConsiderations"].ToString());
-            
+                reader["CurrentStatus"] == DBNull.Value ? string.Empty : reader["CurrentStatus"].ToString() ?? string.Empty,
+                reader["SpecialConsiderations"] == DBNull.Value ? string.Empty : reader["SpecialConsiderations"].ToString() ?? string.Empty,
+                caseOfficerId);
         }
     }
 }

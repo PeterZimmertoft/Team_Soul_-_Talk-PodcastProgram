@@ -3,6 +3,7 @@ using Soul_Talk.Model;
 using Soul_Talk.Persistence__Repositories_;
 using Soul_Talk.Services;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -12,11 +13,15 @@ namespace Soul_Talk.ViewModel
     {
         private readonly IGuestRepository _guestRepository;
         private readonly ICitizenRepository _citizenRepository;
+        private readonly ICaseOfficerRepository _caseOfficerRepository;
         private readonly INavigationService _navigationService;
+        private readonly IMessageService _messageService;
+        private readonly IValidationService _validationService;
 
         private Guest _guestToEdit;
         private Citizen _citizenToEdit;
         private bool _isEditMode;
+        private int? _caseOfficerId;
 
         public string PageTitle
         {
@@ -32,6 +37,7 @@ namespace Soul_Talk.ViewModel
         public string ConsentStatus { get; set; }
         public string CurrentStatus { get; set; }
         public string SpecialConsiderations { get; set; }
+        public string CaseOfficerName { get; set; }
 
         private bool _hasCitizenInfo;
         public bool HasCitizenInfo
@@ -44,18 +50,28 @@ namespace Soul_Talk.ViewModel
             }
         }
 
-        public ICommand SaveGuestCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
+        public ICommand SaveGuestCommand { get; }
+        public ICommand CancelCommand { get; }
 
-        public CreateGuestViewModel(IGuestRepository guestRepository, ICitizenRepository citizenRepository, INavigationService navigationService)
+        public CreateGuestViewModel(
+            IGuestRepository guestRepository,
+            ICitizenRepository citizenRepository,
+            ICaseOfficerRepository caseOfficerRepository,
+            INavigationService navigationService,
+            IMessageService messageService,
+            IValidationService validationService)
         {
             _guestRepository = guestRepository;
             _citizenRepository = citizenRepository;
+            _caseOfficerRepository = caseOfficerRepository;
             _navigationService = navigationService;
+            _messageService = messageService;
+            _validationService = validationService;
 
             _guestToEdit = null;
             _citizenToEdit = null;
             _isEditMode = false;
+            _caseOfficerId = null;
 
             Name = string.Empty;
             Phone = string.Empty;
@@ -66,14 +82,22 @@ namespace Soul_Talk.ViewModel
             ConsentStatus = string.Empty;
             CurrentStatus = string.Empty;
             SpecialConsiderations = string.Empty;
+            CaseOfficerName = string.Empty;
             HasCitizenInfo = false;
 
-            SaveGuestCommand = new RelayCommand(SaveGuest);
-            CancelCommand = new RelayCommand(Cancel);
+            SaveGuestCommand = new CreateGuestSaveCommand(this);
+            CancelCommand = new CreateGuestCancelNavigationCommand(this);
         }
 
-        public CreateGuestViewModel(IGuestRepository guestRepository, ICitizenRepository citizenRepository, INavigationService navigationService, Guest guestToEdit)
-            : this(guestRepository, citizenRepository, navigationService)
+        public CreateGuestViewModel(
+            IGuestRepository guestRepository,
+            ICitizenRepository citizenRepository,
+            ICaseOfficerRepository caseOfficerRepository,
+            INavigationService navigationService,
+            IMessageService messageService,
+            IValidationService validationService,
+            Guest guestToEdit)
+            : this(guestRepository, citizenRepository, caseOfficerRepository, navigationService, messageService, validationService)
         {
             _guestToEdit = guestToEdit;
             _isEditMode = guestToEdit != null;
@@ -95,18 +119,19 @@ namespace Soul_Talk.ViewModel
                     ConsentStatus = _citizenToEdit.ConsentStatus;
                     CurrentStatus = _citizenToEdit.CurrentStatus;
                     SpecialConsiderations = _citizenToEdit.SpecialConsiderations;
+                    CaseOfficerName = GetCaseOfficerName(_citizenToEdit.CaseOfficerId);
                 }
 
                 OnPropertyChanged(nameof(PageTitle));
             }
         }
 
-        private void Cancel()
+        public void Cancel()
         {
             _navigationService.NavigateToGuest();
         }
 
-        private void SaveGuest()
+        public void SaveGuest()
         {
             if (!BasicGuestInformationIsValid())
             {
@@ -118,9 +143,14 @@ namespace Soul_Talk.ViewModel
                 return;
             }
 
+            if (HasCitizenInfo && !TrySetCaseOfficerId())
+            {
+                return;
+            }
+
             if (ProfileAlreadyExists())
             {
-                MessageBox.Show("Der findes allerede en anden gæst med samme navn, telefon og email.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                _messageService.ShowInfo("Der findes allerede en anden gæst med samme navn, telefon og email.");
                 return;
             }
 
@@ -135,12 +165,12 @@ namespace Soul_Talk.ViewModel
                     CreateNewGuest();
                 }
 
-                MessageBox.Show("Gæsten er gemt.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                _messageService.ShowInfo("Gæsten er gemt.");
                 _navigationService.NavigateToGuest();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gæsten kunne ikke gemmes: " + ex.Message, "Fejl", MessageBoxButton.OK, MessageBoxImage.Error);
+                _messageService.ShowError("Gæsten kunne ikke gemmes: " + ex.Message);
             }
         }
 
@@ -148,7 +178,7 @@ namespace Soul_Talk.ViewModel
         {
             if (string.IsNullOrWhiteSpace(Name) || string.IsNullOrWhiteSpace(Phone) || string.IsNullOrWhiteSpace(Email))
             {
-                MessageBox.Show("Udfyld venligst navn, telefon og email.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _messageService.ShowWarning("Udfyld venligst navn, telefon og email.");
                 return false;
             }
 
@@ -161,29 +191,34 @@ namespace Soul_Talk.ViewModel
                 || string.IsNullOrWhiteSpace(WorkStatus)
                 || string.IsNullOrWhiteSpace(WorkType)
                 || string.IsNullOrWhiteSpace(ConsentStatus)
-                || string.IsNullOrWhiteSpace(CurrentStatus))
+                || string.IsNullOrWhiteSpace(CurrentStatus)
+                || string.IsNullOrWhiteSpace(CaseOfficerName))
             {
-                MessageBox.Show("Udfyld venligst CPR, jobstatus, arbejdstype, samtykkestatus og nuværende status.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _messageService.ShowWarning("Udfyld venligst CPR, jobstatus, arbejdstype, samtykkestatus, nuværende status og sagsbehandler.");
                 return false;
             }
 
-            if (!IsValidCprNumber(CprNumber))
+            if (!_validationService.IsValidCprNumber(CprNumber))
             {
-                MessageBox.Show("Angiv venligst CPR-nummer i formatet DDMMYY-XXXX.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _messageService.ShowWarning("Angiv venligst CPR-nummer i formatet DDMMYY-XXXX.");
                 return false;
             }
 
-            if (!IsValidConsentStatus(ConsentStatus))
+            if (!_validationService.IsValidConsentStatus(ConsentStatus))
             {
-                MessageBox.Show("Samtykkestatus skal være Ja eller Nej.", "Fejl", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _messageService.ShowWarning("Samtykkestatus skal være Ja eller Nej.");
                 return false;
             }
 
-            int currentCitizenId = _citizenToEdit == null ? 0 : _citizenToEdit.CitizenId;
+            int currentCitizenId = _citizenToEdit?.CitizenId ?? 0;
 
-            if (_citizenRepository.CprExistsForAnotherCitizen(CprNumber, currentCitizenId))
+            bool cprBelongsToAnotherCitizen = _citizenRepository.CprExistsForAnotherCitizen(
+                CprNumber.Trim(),
+                currentCitizenId);
+
+            if (cprBelongsToAnotherCitizen)
             {
-                MessageBox.Show("Der findes allerede en anden borger med samme CPR-nummer.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                _messageService.ShowInfo("Der findes allerede en anden borger med samme CPR-nummer.");
                 return false;
             }
 
@@ -211,7 +246,7 @@ namespace Soul_Talk.ViewModel
             }
 
             Guest newGuest = BuildGuest(0);
-            _guestRepository.AddGuest(newGuest, citizenId);
+            _guestRepository.Add(newGuest, citizenId);
         }
 
         private void UpdateExistingGuest()
@@ -235,7 +270,7 @@ namespace Soul_Talk.ViewModel
             }
 
             Guest updatedGuest = BuildGuest(_guestToEdit.GuestId);
-            _guestRepository.UpdateGuest(updatedGuest, citizenId);
+            _guestRepository.Update(updatedGuest, citizenId);
 
             if (!HasCitizenInfo && oldCitizenId.HasValue)
             {
@@ -266,44 +301,35 @@ namespace Soul_Talk.ViewModel
                 WorkType.Trim(),
                 ConsentStatus.Trim(),
                 CurrentStatus.Trim(),
-                SpecialConsiderations);
+                SpecialConsiderations,
+                _caseOfficerId ?? 0);
         }
 
-        private bool IsValidCprNumber(string cprNumber)
+        private bool TrySetCaseOfficerId()
         {
-            if (string.IsNullOrWhiteSpace(cprNumber) || cprNumber.Length != 11 || cprNumber[6] != '-')
-            {
-                return false;
-            }
+            string caseOfficerName = CaseOfficerName.Trim();
 
-            for (int i = 0; i < 6; i++)
-            {
-                if (!char.IsDigit(cprNumber[i]))
-                {
-                    return false;
-                }
-            }
+            CaseOfficer caseOfficer = _caseOfficerRepository.GetOrCreateByName(caseOfficerName);
 
-            for (int i = 7; i < 11; i++)
-            {
-                if (!char.IsDigit(cprNumber[i]))
-                {
-                    return false;
-                }
-            }
-
+            _caseOfficerId = caseOfficer.CaseOfficerId;
+            CaseOfficerName = caseOfficer.Name;
+            OnPropertyChanged(nameof(CaseOfficerName));
             return true;
         }
 
-        private bool IsValidConsentStatus(string consentStatus)
+        private string GetCaseOfficerName(int caseOfficerId)
         {
-            if (string.IsNullOrWhiteSpace(consentStatus))
+            if (caseOfficerId <= 0)
             {
-                return false;
+                return string.Empty;
             }
 
-            string value = consentStatus.Trim().ToLower();
-            return value == "ja" || value == "nej" || value == "true" || value == "false" || value == "1" || value == "0";
+            CaseOfficer caseOfficer = _caseOfficerRepository
+                .GetAll()
+                .FirstOrDefault(co => co.CaseOfficerId == caseOfficerId);
+
+            return caseOfficer?.Name ?? string.Empty;
         }
+
     }
 }

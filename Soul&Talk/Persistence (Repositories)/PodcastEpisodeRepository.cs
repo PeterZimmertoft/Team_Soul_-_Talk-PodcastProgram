@@ -6,7 +6,6 @@ using Soul_Talk.Model;
 
 namespace Soul_Talk.Persistence__Repositories_
 {
-    // UC2: Planlæg podcast-episode.
     public class PodcastEpisodeRepository : IPodcastEpisodeRepository
     {
         private readonly string connectionString;
@@ -24,10 +23,19 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT PodcastEpisodeID, Title, Date, Duration, Status, MeetingPlace, Note, CaseOfficerName " +
-                    "FROM PodcastEpisode " +
-                    "ORDER BY Date DESC", connection);
+                SqlCommand cmd = new SqlCommand(@"
+                    SELECT pe.PodcastEpisodeID,
+                           pe.Title,
+                           pe.[Date],
+                           pe.Duration,
+                           pe.Status,
+                           pe.MeetingPlace,
+                           pe.Note,
+                           pe.CaseOfficerId,
+                           co.Name AS CaseOfficerName
+                    FROM PodcastEpisode pe
+                    INNER JOIN CaseOfficer co ON co.CaseOfficerId = pe.CaseOfficerId
+                    ORDER BY pe.[Date] DESC", connection);
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -47,9 +55,19 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "SELECT PodcastEpisodeID, Title, Date, Duration, Status, MeetingPlace, Note, CaseOfficerName " +
-                    "FROM PodcastEpisode WHERE PodcastEpisodeID = @PodcastEpisodeID", connection);
+                SqlCommand cmd = new SqlCommand(@"
+                    SELECT pe.PodcastEpisodeID,
+                           pe.Title,
+                           pe.[Date],
+                           pe.Duration,
+                           pe.Status,
+                           pe.MeetingPlace,
+                           pe.Note,
+                           pe.CaseOfficerId,
+                           co.Name AS CaseOfficerName
+                    FROM PodcastEpisode pe
+                    INNER JOIN CaseOfficer co ON co.CaseOfficerId = pe.CaseOfficerId
+                    WHERE pe.PodcastEpisodeID = @PodcastEpisodeID", connection);
 
                 cmd.Parameters.Add("@PodcastEpisodeID", SqlDbType.Int).Value = id;
 
@@ -66,10 +84,10 @@ namespace Soul_Talk.Persistence__Repositories_
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand(
-                    "INSERT INTO PodcastEpisode (Title, Date, Duration, Status, MeetingPlace, Note, CaseOfficerName) " +
-                    "VALUES (@Title, @Date, @Duration, @Status, @MeetingPlace, @Note, @CaseOfficerName); " +
-                    "SELECT CAST(SCOPE_IDENTITY() AS INT);", connection);
+                SqlCommand cmd = new SqlCommand(@"
+                    INSERT INTO PodcastEpisode (Title, [Date], Duration, Status, MeetingPlace, Note, CaseOfficerId)
+                    VALUES (@Title, @Date, @Duration, @Status, @MeetingPlace, @Note, @CaseOfficerId);
+                    SELECT CAST(SCOPE_IDENTITY() AS int);", connection);
 
                 AddParameters(cmd, model);
 
@@ -84,8 +102,8 @@ namespace Soul_Talk.Persistence__Repositories_
                 connection.Open();
 
                 SqlCommand cmd = new SqlCommand(
-                    "UPDATE PodcastEpisode SET Title = @Title, Date = @Date, Duration = @Duration, " +
-                    "Status = @Status, MeetingPlace = @MeetingPlace, Note = @Note, CaseOfficerName = @CaseOfficerName " +
+                    "UPDATE PodcastEpisode SET Title = @Title, [Date] = @Date, Duration = @Duration, " +
+                    "Status = @Status, MeetingPlace = @MeetingPlace, Note = @Note, CaseOfficerId = @CaseOfficerId " +
                     "WHERE PodcastEpisodeID = @PodcastEpisodeID", connection);
 
                 AddParameters(cmd, model);
@@ -112,6 +130,7 @@ namespace Soul_Talk.Persistence__Repositories_
                 deleteEpisode.ExecuteNonQuery();
             }
         }
+
         public int AddGuestToPodcastEpisode(int podcastEpisodeId, int guestId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -139,10 +158,10 @@ namespace Soul_Talk.Persistence__Repositories_
                 connection.Open();
 
                 SqlCommand cmd = new SqlCommand(
-                    "SELECT Guest.GuestId, Guest.Name, Guest.Phone, Guest.Email " +
-                    "FROM PodcastEpisodeGuests " +
-                    "INNER JOIN Guest ON PodcastEpisodeGuests.GuestId = Guest.GuestId " +
-                    "WHERE PodcastEpisodeGuests.PodcastEpisodeID = @PodcastEpisodeID", connection);
+                    "SELECT g.GuestId, g.Name, g.Phone, g.Email " +
+                    "FROM PodcastEpisodeGuests peg " +
+                    "INNER JOIN Guest g ON peg.GuestId = g.GuestId " +
+                    "WHERE peg.PodcastEpisodeID = @PodcastEpisodeID", connection);
 
                 cmd.Parameters.Add("@PodcastEpisodeID", SqlDbType.Int).Value = podcastEpisodeId;
 
@@ -162,10 +181,10 @@ namespace Soul_Talk.Persistence__Repositories_
         {
             cmd.Parameters.Add("@Title", SqlDbType.NVarChar, 100).Value = model.Title;
             cmd.Parameters.Add("@Date", SqlDbType.DateTime2).Value = model.Date;
-            cmd.Parameters.Add("@Duration", SqlDbType.Int).Value = model.Duration;
+            cmd.Parameters.Add("@Duration", SqlDbType.Time).Value = model.Duration;
             cmd.Parameters.Add("@Status", SqlDbType.NVarChar, 50).Value = model.Status;
             cmd.Parameters.Add("@MeetingPlace", SqlDbType.NVarChar, 100).Value = model.MeetingPlace;
-            cmd.Parameters.Add("@CaseOfficerName", SqlDbType.NVarChar, 50).Value = model.CaseOfficerName;
+            cmd.Parameters.Add("@CaseOfficerId", SqlDbType.Int).Value = model.CaseOfficerId;
             cmd.Parameters.Add("@Note", SqlDbType.NVarChar, 255).Value = string.IsNullOrWhiteSpace(model.Note) ? DBNull.Value : model.Note;
         }
 
@@ -173,14 +192,15 @@ namespace Soul_Talk.Persistence__Repositories_
         {
             PodcastEpisode episode = new PodcastEpisode(
                 reader.GetInt32(reader.GetOrdinal("PodcastEpisodeID")),
-                reader["Title"] as string,
+                reader["Title"] == DBNull.Value ? string.Empty : reader["Title"].ToString() ?? string.Empty,
                 (DateTime)reader["Date"],
-                reader.GetInt32(reader.GetOrdinal("Duration")),
-                reader["Status"] as string,
-                reader["MeetingPlace"] as string,
-                reader["Note"] as string);
+                reader.GetTimeSpan(reader.GetOrdinal("Duration")),
+                reader["Status"] == DBNull.Value ? string.Empty : reader["Status"].ToString() ?? string.Empty,
+                reader["MeetingPlace"] == DBNull.Value ? string.Empty : reader["MeetingPlace"].ToString() ?? string.Empty,
+                reader["Note"] == DBNull.Value ? string.Empty : reader["Note"].ToString() ?? string.Empty);
 
-            episode.CaseOfficerName = reader["CaseOfficerName"] as string;
+            episode.CaseOfficerId = reader.GetInt32(reader.GetOrdinal("CaseOfficerId"));
+            episode.CaseOfficerName = reader["CaseOfficerName"] == DBNull.Value ? string.Empty : reader["CaseOfficerName"].ToString() ?? string.Empty;
 
             return episode;
         }
@@ -190,9 +210,9 @@ namespace Soul_Talk.Persistence__Repositories_
             return new Guest
             {
                 GuestId = reader.GetInt32(reader.GetOrdinal("GuestId")),
-                Name = reader["Name"] as string,
-                Phone = reader["Phone"] as string,
-                Email = reader["Email"] as string
+                Name = reader["Name"] == DBNull.Value ? string.Empty : reader["Name"].ToString() ?? string.Empty,
+                Phone = reader["Phone"] == DBNull.Value ? string.Empty : reader["Phone"].ToString() ?? string.Empty,
+                Email = reader["Email"] == DBNull.Value ? string.Empty : reader["Email"].ToString() ?? string.Empty
             };
         }
     }
