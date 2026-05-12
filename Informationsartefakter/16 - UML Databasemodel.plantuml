@@ -63,6 +63,14 @@ class "PODCAST_EPISODE" <<table>>{
     {method} <<PK>> PK_PODCASTEPISODE()
     {method} <<FK>> FK_PODCASTEPISODE_GUEST()
     {method} <<FK>> FK_PODCASTEPISODE_CASEOFFICER()
+
+class "PodcastEpisodeGuests" <<table>>{
+    {static} <<PK>> PodcastEpisodeId : Int
+    {static} <<PK>> GuestId : Int
+    //<<FK>> PodcastEpisodeId : Int//
+    {method} <<PK>> PK_PODCASTEPISODEGUESTS()
+    {method} <<FK>> FK_PODCASTEPISODEGUESTS_PODCASTEPISODE()
+    {method} <<FK>> FK_PODCASTEPISODEGUESTS_GUEST()
 }
 
 'relationer'
@@ -71,6 +79,7 @@ CASEOFFICER "1" -- "0..*" PODCASTEPISODE
 CASEOFFICER "1" -- "0..*" CITIZEN
 CITIZEN "1" -- "1" GUEST
 PODCASTEPISODE "0..*" -- "1" GUEST
+PodcastEpisodeGuests "0..*" -- "1" PODCASTEPISODE
 
 
 @enduml

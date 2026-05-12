@@ -4,9 +4,13 @@ title <u>UC1: Opret profil til podcast episode  </u>
 Actor ":Podcast Owner" as PO
 participant "<u>:System</u>" as System
 
-PO -> System: OpretProfil(navn, telefon, email)
+PO -> System: vælgOpretProfil()
 
-PO -> System: GemProfil (navn, telefon, email)
+System -->> PO: Viser Formular
+
+PO -> System: gemProfil (navn, telefon, email)
+
+System -->> PO: Validering af profilinformationer
 
 opt Hvis profil er en borger
     PO -> System: tilføjBorgerInformationer(CPR,jobStatus, osv.)

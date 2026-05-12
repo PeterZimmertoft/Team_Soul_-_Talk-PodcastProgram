@@ -33,7 +33,8 @@ namespace UseCase1_Test
                 expectedWorkType,
                 expectedConsent,
                 expectedStatus,
-                expectedNotes
+                expectedNotes,
+                1
             );
 
             // Assert
