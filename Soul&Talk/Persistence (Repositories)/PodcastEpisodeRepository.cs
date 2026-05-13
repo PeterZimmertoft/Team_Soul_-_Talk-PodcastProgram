@@ -89,6 +89,9 @@ namespace Soul_Talk.Persistence__Repositories_
                     VALUES (@Title, @Date, @Duration, @Status, @MeetingPlace, @Note, @CaseOfficerId);
                     SELECT CAST(SCOPE_IDENTITY() AS int);", connection);
 
+                
+
+
                 AddParameters(cmd, model);
 
                 return Convert.ToInt32(cmd.ExecuteScalar());
@@ -181,7 +184,7 @@ namespace Soul_Talk.Persistence__Repositories_
         {
             cmd.Parameters.Add("@Title", SqlDbType.NVarChar, 100).Value = model.Title;
             cmd.Parameters.Add("@Date", SqlDbType.DateTime2).Value = model.Date;
-            cmd.Parameters.Add("@Duration", SqlDbType.Time).Value = model.Duration;
+            cmd.Parameters.Add("@Duration", SqlDbType.Int).Value = (int)model.Duration.TotalMinutes;
             cmd.Parameters.Add("@Status", SqlDbType.NVarChar, 50).Value = model.Status;
             cmd.Parameters.Add("@MeetingPlace", SqlDbType.NVarChar, 100).Value = model.MeetingPlace;
             cmd.Parameters.Add("@CaseOfficerId", SqlDbType.Int).Value = model.CaseOfficerId;
@@ -194,7 +197,8 @@ namespace Soul_Talk.Persistence__Repositories_
                 reader.GetInt32(reader.GetOrdinal("PodcastEpisodeID")),
                 reader["Title"] == DBNull.Value ? string.Empty : reader["Title"].ToString() ?? string.Empty,
                 (DateTime)reader["Date"],
-                reader.GetTimeSpan(reader.GetOrdinal("Duration")),
+                TimeSpan.FromMinutes(reader.GetInt32(reader.GetOrdinal("Duration"))),
+
                 reader["Status"] == DBNull.Value ? string.Empty : reader["Status"].ToString() ?? string.Empty,
                 reader["MeetingPlace"] == DBNull.Value ? string.Empty : reader["MeetingPlace"].ToString() ?? string.Empty,
                 reader["Note"] == DBNull.Value ? string.Empty : reader["Note"].ToString() ?? string.Empty);
