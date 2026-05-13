@@ -31,26 +31,18 @@ class "CITIZEN" <<table>>{
     {method} <<FK>> FK_CITIZEN_CASEOFFICER()
 }
 
-class "LOCAL_AUTHORITY" <<table>>{
-    {static} <<PK>> LocalAuthorityId : Int
-    {field} LocalAuthorityName : NVarChar(50)
-    {field} EANNumber : NVarChar(14)
-    {method} <<PK>> PK_LOCALAUTHORITY()
-}
 
-class "CASE_OFFICER" <<table>>{
+class "CASEOFFICER" <<table>>{
     {static} <<PK>> CaseOfficerId : Int
     {field} Name : NVarChar(50)
     {field} Department : NVarChar(50)
     {field} Phone : NVarChar(12)
     {field} Email : NVarChar(50)
-    //<<FK>> LocalAuthorityId : Int//
     {method} <<PK>> PK_CASEOFFICER()
-    {method} <<FK>> FK_CASEOFFICER_LOCALAUTHORITY()
     
 }
 
-class "PODCAST_EPISODE" <<table>>{
+class "PODCASTEPISODE" <<table>>{
     {static} <<PK>> PodcastEpisodeId : Int
     {field} Title : NVarChar(50)
     {field} Date : DateTime2
@@ -74,7 +66,6 @@ class "PodcastEpisodeGuests" <<table>>{
 }
 
 'relationer'
-LOCALAUTHORITY "1" -- "0..*" CASEOFFICER
 CASEOFFICER "1" -- "0..*" PODCASTEPISODE
 CASEOFFICER "1" -- "0..*" CITIZEN
 CITIZEN "1" -- "1" GUEST
